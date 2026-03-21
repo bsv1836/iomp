@@ -33,10 +33,18 @@ public class ProductService {
                 .description(request.getDescription())
                 .startingPrice(request.getStartingPrice())
                 .currentPrice(request.getStartingPrice())
-                .bidIncrement(request.getBidIncrement())
+                .bidIncrement(request.getBidIncrement() != null ? request.getBidIncrement() : 0.0)
                 .auctionEndTime(request.getAuctionEndTime())
                 .saleType(request.getSaleType())
                 .status(ProductStatus.ACTIVE)
+                .category(request.getCategory())
+                .brand(request.getBrand())
+                .productCondition(request.getProductCondition())
+                .damages(request.getDamages())
+                .location(request.getLocation())
+                .purchaseMonth(request.getPurchaseMonth())
+                .purchaseYear(request.getPurchaseYear())
+                .warrantyRemaining(request.getWarrantyRemaining())
                 .build();
 
         return ProductResponse.from(productRepository.save(product));

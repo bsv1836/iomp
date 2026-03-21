@@ -1,15 +1,17 @@
 package com.marketplace.digital_marketplace.dto;
 
-import com.marketplace.digital_marketplace.entity.Product.SaleType;
-import jakarta.validation.constraints.*;
+import com.marketplace.digital_marketplace.entity.Product;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.Data;
+
 import java.time.LocalDateTime;
 
 @Data
 public class ProductRequest {
 
     @NotBlank(message = "Product name is required")
-    @Size(max = 200)
     private String name;
 
     private String description;
@@ -18,12 +20,21 @@ public class ProductRequest {
     @Positive(message = "Starting price must be positive")
     private Double startingPrice;
 
-    @NotNull(message = "Bid increment is required")
-    @PositiveOrZero(message = "Bid increment must be positive")
+    @Positive(message = "Bid increment must be positive")
     private Double bidIncrement;
 
     private LocalDateTime auctionEndTime;
 
     @NotNull(message = "Sale type is required")
-    private SaleType saleType;
+    private Product.SaleType saleType;
+
+    // ─── New Fields ──────────────────────────────────────────────────
+    private String category;
+    private String brand;
+    private String productCondition;
+    private String damages;
+    private String location;
+    private Integer purchaseMonth;
+    private Integer purchaseYear;
+    private String warrantyRemaining;
 }

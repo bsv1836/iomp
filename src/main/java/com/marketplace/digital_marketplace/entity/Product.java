@@ -50,11 +50,41 @@ public class Product {
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
+    // ─── New Fields ──────────────────────────────────────────────────
+
+    @Column(length = 100)
+    private String category;
+
+    @Column(length = 100)
+    private String brand;
+
+    @Column(name = "product_condition", length = 50)
+    private String productCondition;      // e.g. "Like New", "Good", "Fair", "Poor"
+
+    @Column(columnDefinition = "TEXT")
+    private String damages;        // description of any damages
+
+    @Column(length = 100)
+    private String location;       // city/area of seller
+
+    @Column(name = "purchase_month")
+    private Integer purchaseMonth; // 1-12
+
+    @Column(name = "purchase_year")
+    private Integer purchaseYear;  // e.g. 2022
+
+    @Column(name = "warranty_remaining", length = 100)
+    private String warrantyRemaining; // e.g. "6 months", "None"
+
+    @Column(name = "image_path", length = 500)
+    private String imagePath;      // path to uploaded image
+
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
         if (status == null) status = ProductStatus.ACTIVE;
         if (currentPrice == null) currentPrice = startingPrice;
+        if (bidIncrement == null) bidIncrement = 0.0;
     }
 
     public enum SaleType { AUCTION, DIRECT }

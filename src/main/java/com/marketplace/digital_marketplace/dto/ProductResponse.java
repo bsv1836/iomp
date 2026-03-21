@@ -24,6 +24,17 @@ public class ProductResponse {
     private ProductStatus status;
     private LocalDateTime createdAt;
 
+    // ─── New Fields ──────────────────────────────────────────────────
+    private String category;
+    private String brand;
+    private String productCondition;
+    private String damages;
+    private String location;
+    private Integer purchaseMonth;
+    private Integer purchaseYear;
+    private String warrantyRemaining;
+    private String imagePath;
+
     public static ProductResponse from(Product p) {
         return ProductResponse.builder()
                 .productId(p.getProductId())
@@ -38,6 +49,15 @@ public class ProductResponse {
                 .saleType(p.getSaleType())
                 .status(p.getStatus())
                 .createdAt(p.getCreatedAt())
+                .category(p.getCategory())
+                .brand(p.getBrand())
+                .productCondition(p.getProductCondition())
+                .damages(p.getDamages())
+                .location(p.getLocation())
+                .purchaseMonth(p.getPurchaseMonth())
+                .purchaseYear(p.getPurchaseYear())
+                .warrantyRemaining(p.getWarrantyRemaining())
+                .imagePath(p.getImagePath())
                 .build();
     }
 }
