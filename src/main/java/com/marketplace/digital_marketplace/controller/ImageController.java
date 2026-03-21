@@ -1,5 +1,7 @@
 package com.marketplace.digital_marketplace.controller;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import com.marketplace.digital_marketplace.entity.Product;
 import com.marketplace.digital_marketplace.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
@@ -7,12 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.UUID;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/images")
@@ -20,9 +18,7 @@ import java.util.UUID;
 public class ImageController {
 
     private final ProductRepository productRepository;
-
-    // Directory where images will be stored
-    private static final String UPLOAD_DIR = "uploads/";
+    private final Cloudinary cloudinary;
 
     @PostMapping("/upload/{productId}")
     public ResponseEntity<?> uploadImage(
@@ -30,28 +26,25 @@ public class ImageController {
             @RequestParam("file") MultipartFile file) {
 
         try {
-            // Create uploads folder if it doesn't exist
-            File uploadDir = new File(UPLOAD_DIR);
-            if (!uploadDir.exists()) {
-                uploadDir.mkdirs();
-            }
+            // Upload to Cloudinary
+            Map uploadResult = cloudinary.uploader().upload(
+                    file.getBytes(),
+                    ObjectUtils.asMap(
+                            "folder", "digital-marketplace",
+                            "resource_type", "image"
+                    )
+            );
 
-            // Generate unique filename
-            String extension = file.getOriginalFilename()
-                    .substring(file.getOriginalFilename().lastIndexOf("."));;
-            String filename = UUID.randomUUID().toString() + extension;
-
-            // Save file to disk
-            Path filePath = Paths.get(UPLOAD_DIR + filename);
-            Files.write(filePath, file.getBytes());
+            // Get the secure URL from Cloudinary
+            String imageUrl = (String) uploadResult.get("secure_url");
 
             // Update product imagePath in database
             Product product = productRepository.findById(productId)
                     .orElseThrow(() -> new RuntimeException("Product not found"));
-            product.setImagePath("/uploads/" + filename);
+            product.setImagePath(imageUrl);
             productRepository.save(product);
 
-            return ResponseEntity.ok("/uploads/" + filename);
+            return ResponseEntity.ok(imageUrl);
 
         } catch (IOException e) {
             return ResponseEntity.internalServerError()

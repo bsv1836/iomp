@@ -75,6 +75,13 @@
 		<artifactId>spring-boot-starter-websocket</artifactId>
 	</dependency>
 
+	<!-- Cloudinary for image storage -->
+	<dependency>
+		<groupId>com.cloudinary</groupId>
+		<artifactId>cloudinary-http45</artifactId>
+		<version>1.39.0</version>
+	</dependency>
+
     <!-- JWT -->
     <dependency>
         <groupId>io.jsonwebtoken</groupId>
