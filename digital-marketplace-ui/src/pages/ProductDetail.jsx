@@ -22,6 +22,7 @@ function ProductDetail() {
     const [liveMessages, setLiveMessages] = useState([])
     const [winner, setWinner] = useState(null)
     const stompClient = useRef(null)
+    const [contacts, setContacts] = useState(null)
 
     useEffect(() => {
         API.get(`/api/products/${id}`)
@@ -64,6 +65,14 @@ function ProductDetail() {
         stompClient.current = client
         return () => client.deactivate()
     }, [id])
+
+    useEffect(() => {
+        if (product?.status === 'SOLD' && localStorage.getItem('token')) {
+            API.get(`/api/products/${id}/contacts`)
+                .then(res => setContacts(res.data))
+                .catch(() => setContacts(null))
+        }
+    }, [product?.status])
 
     const handleBid = async () => {
         if (!localStorage.getItem('token')) { navigate('/login'); return }
@@ -293,6 +302,26 @@ function ProductDetail() {
                                 )}
                                 {message && <p style={styles.success}>✅ {message}</p>}
                                 {error && <p style={styles.errorText}>{error}</p>}
+                            </div>
+                        )}
+
+                        {/* Contact Details */}
+                        {contacts && (
+                            <div style={styles.contactCard}>
+                                <p style={styles.cardTitle}>📬 Contact Details</p>
+                                <div style={styles.contactSection}>
+                                    <p style={styles.contactRole}>🧑‍💼 Seller</p>
+                                    <p style={styles.contactItem}>👤 {contacts.sellerName}</p>
+                                    <p style={styles.contactItem}>✉️ {contacts.sellerEmail}</p>
+                                    <p style={styles.contactItem}>📱 {contacts.sellerMobile || 'Not provided'}</p>
+                                </div>
+                                <div style={styles.divider} />
+                                <div style={styles.contactSection}>
+                                    <p style={styles.contactRole}>🏆 Winner</p>
+                                    <p style={styles.contactItem}>👤 {contacts.winnerName}</p>
+                                    <p style={styles.contactItem}>✉️ {contacts.winnerEmail}</p>
+                                    <p style={styles.contactItem}>📱 {contacts.winnerMobile || 'Not provided'}</p>
+                                </div>
                             </div>
                         )}
 
@@ -553,6 +582,15 @@ const styles = {
     },
     liveText: { color: '#aaaacc', fontSize: '13px' },
     liveTime: { color: '#8888aa', fontSize: '11px' },
+    contactCard: {
+        backgroundColor: '#12121f',
+        borderRadius: '14px',
+        padding: '20px',
+        border: '1px solid #00b09b44',
+    },
+    contactSection: { display: 'flex', flexDirection: 'column', gap: '6px', margin: '8px 0' },
+    contactRole: { color: '#00b09b', fontSize: '13px', fontWeight: '600', margin: '0 0 4px 0' },
+    contactItem: { color: '#aaaacc', fontSize: '13px', margin: 0 },
 }
 
 export default ProductDetail

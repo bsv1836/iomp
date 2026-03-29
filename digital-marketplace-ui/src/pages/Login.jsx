@@ -18,10 +18,10 @@ function Login() {
         setError('')
         try {
             const res = await API.post('/api/users/login', form)
-            const token = typeof res.data === 'string' ? res.data : res.data.token
+            const token = res.data.token
+            const name = res.data.name
             localStorage.setItem('token', token)
-            const payload = JSON.parse(atob(token.split('.')[1]))
-            localStorage.setItem('userName', payload.sub)
+            localStorage.setItem('userName', name)
             navigate('/products')
         } catch (err) {
             setError('Invalid email or password. Please try again.')

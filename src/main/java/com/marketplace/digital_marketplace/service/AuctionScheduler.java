@@ -2,9 +2,13 @@ package com.marketplace.digital_marketplace.service;
 
 import com.marketplace.digital_marketplace.dto.BidMessage;
 import com.marketplace.digital_marketplace.entity.Bid;
+import com.marketplace.digital_marketplace.entity.Notification;
 import com.marketplace.digital_marketplace.entity.Product;
+import com.marketplace.digital_marketplace.entity.User;
 import com.marketplace.digital_marketplace.repository.BidRepository;
+import com.marketplace.digital_marketplace.repository.NotificationRepository;
 import com.marketplace.digital_marketplace.repository.ProductRepository;
+import com.marketplace.digital_marketplace.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -20,13 +24,13 @@ public class AuctionScheduler {
 
     private final ProductRepository productRepository;
     private final BidRepository bidRepository;
+    private final NotificationRepository notificationRepository;
+    private final UserRepository userRepository;
     private final SimpMessagingTemplate messagingTemplate;
 
-    // Runs every 60 seconds automatically
     @Scheduled(fixedRate = 60000)
     public void closeExpiredAuctions() {
 
-        // Find all products that are still ACTIVE but end time has passed
         List<Product> expiredAuctions = productRepository
                 .findByStatusAndAuctionEndTimeBefore(
                         Product.ProductStatus.ACTIVE,
@@ -35,60 +39,78 @@ public class AuctionScheduler {
 
         for (Product product : expiredAuctions) {
 
-            // Find the highest bid for this product
             Optional<Bid> highestBid = bidRepository
                     .findTopByProductOrderByBidAmountDesc(product);
 
             BidMessage closeMessage;
 
             if (highestBid.isPresent()) {
-                // There was at least one bid — mark as SOLD
-                product.setStatus(Product.ProductStatus.SOLD);
-
-                String winnerName = highestBid.get().getBidder().getName();
+                User winner = highestBid.get().getBidder();
                 Double winningAmount = highestBid.get().getBidAmount();
 
-                System.out.println("Auction CLOSED (SOLD): " + product.getName()
-                        + " | Winner: " + winnerName
+                // Set status to PENDING — waits for seller confirmation
+                product.setStatus(Product.ProductStatus.PENDING);
+                product.setWinnerId(winner.getId());
+                productRepository.save(product);
+
+                System.out.println("Auction PENDING: " + product.getName()
+                        + " | Winner: " + winner.getName()
                         + " | Amount: " + winningAmount);
 
-                // Broadcast winner to EVERYONE viewing this auction
+                // ── Create notification for winner ──
+                Notification winnerNotification = Notification.builder()
+                        .user(winner)
+                        .message("🏆 Congratulations! You won the auction for '"
+                                + product.getName()
+                                + "' with a bid of ₹" + winningAmount
+                                + "! The seller will confirm the sale shortly.")
+                        .productId(product.getProductId())
+                        .build();
+                notificationRepository.save(winnerNotification);
+
+                // ── Create notification for seller ──
+                Notification sellerNotification = Notification.builder()
+                        .user(product.getSeller())
+                        .message("🎉 Your auction for '" + product.getName()
+                                + "' has ended! Winner: " + winner.getName()
+                                + " with bid of ₹" + winningAmount
+                                + ". Please confirm the sale in your profile.")
+                        .productId(product.getProductId())
+                        .build();
+                notificationRepository.save(sellerNotification);
+
+                // ── Broadcast to all viewers ──
                 closeMessage = new BidMessage(
                         "AUCTION_CLOSED",
                         product.getProductId(),
                         product.getName(),
-                        highestBid.get().getBidder().getId(),
-                        winnerName,
+                        winner.getId(),
+                        winner.getName(),
                         winningAmount,
                         LocalDateTime.now(),
-                        "Auction closed! Winner: " + winnerName
+                        "Auction closed! Winner: " + winner.getName()
                                 + " with bid of ₹" + winningAmount
+                                + ". Awaiting seller confirmation."
                 );
 
             } else {
-                // No bids were placed — mark as EXPIRED
+                // No bids — mark as EXPIRED
                 product.setStatus(Product.ProductStatus.EXPIRED);
+                productRepository.save(product);
 
-                System.out.println("Auction CLOSED (EXPIRED): "
+                System.out.println("Auction EXPIRED: "
                         + product.getName() + " | No bids placed");
 
-                // Broadcast no winner to everyone viewing this auction
                 closeMessage = new BidMessage(
                         "AUCTION_CLOSED",
                         product.getProductId(),
                         product.getName(),
-                        null,
-                        null,
-                        null,
+                        null, null, null,
                         LocalDateTime.now(),
-                        "Auction closed! No bids were placed."
+                        "Auction closed with no bids."
                 );
             }
 
-            productRepository.save(product);
-
-            // Broadcast to /topic/bids/{productId}
-            // Everyone viewing this auction page receives this instantly
             messagingTemplate.convertAndSend(
                     "/topic/bids/" + product.getProductId(), closeMessage);
         }

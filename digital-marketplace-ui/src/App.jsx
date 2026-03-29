@@ -5,6 +5,7 @@ import Products from './pages/Products'
 import ProductDetail from './pages/ProductDetail'
 import Sell from './pages/Sell'
 import MyBids from './pages/MyBids'
+import Profile from './pages/Profile'
 
 function App() {
     return (
@@ -17,6 +18,7 @@ function App() {
                 <Route path="/products/:id" element={<ProductDetail />} />
                 <Route path="/sell" element={<Sell />} />
                 <Route path="/my-bids" element={<MyBids />} />
+                <Route path="/profile" element={<Profile />} />
             </Routes>
         </BrowserRouter>
     )

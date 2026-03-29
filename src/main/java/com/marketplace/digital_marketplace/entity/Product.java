@@ -79,6 +79,9 @@ public class Product {
     @Column(name = "image_path", length = 500)
     private String imagePath;      // path to uploaded image
 
+    @Column(name = "winner_id")
+    private Long winnerId;
+
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
@@ -88,5 +91,5 @@ public class Product {
     }
 
     public enum SaleType { AUCTION, DIRECT }
-    public enum ProductStatus { ACTIVE, SOLD, EXPIRED }
+    public enum ProductStatus { ACTIVE, SOLD, EXPIRED, PENDING }
 }

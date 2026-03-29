@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const API = axios.create({
-    baseURL: 'https://iomp-production-099e.up.railway.app',
+    baseURL: import.meta.env.VITE_API_URL || 'http://localhost:8080',
 })
 
 // Automatically attach JWT token to every request

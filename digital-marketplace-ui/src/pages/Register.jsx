@@ -5,7 +5,7 @@ import API from '../api/axios'
 function Register() {
     const navigate = useNavigate()
     const [form, setForm] = useState({
-        name: '', email: '', password: '', role: 'USER'
+        name: '', email: '', password: '', mobile: '', role: 'USER'
     })
     const [error, setError] = useState('')
     const [loading, setLoading] = useState(false)
@@ -66,6 +66,15 @@ function Register() {
                                 name="email" type="email"
                                 placeholder="you@gmail.com"
                                 value={form.email} onChange={handleChange}
+                                style={styles.input} required
+                            />
+                        </div>
+                        <div style={styles.field}>
+                            <label style={styles.label}>Mobile Number</label>
+                            <input
+                                name="mobile" type="tel"
+                                placeholder="e.g. 9876543210"
+                                value={form.mobile} onChange={handleChange}
                                 style={styles.input} required
                             />
                         </div>

@@ -1,5 +1,6 @@
 package com.marketplace.digital_marketplace.service;
 
+import com.marketplace.digital_marketplace.dto.ContactResponse;
 import com.marketplace.digital_marketplace.dto.BuyResponse;
 import com.marketplace.digital_marketplace.dto.ProductRequest;
 import com.marketplace.digital_marketplace.dto.ProductResponse;
@@ -101,8 +102,9 @@ public class ProductService {
                     "This product is no longer available for purchase.");
         }
 
-        // 6. Mark product as SOLD
-        product.setStatus(ProductStatus.SOLD);
+        // 6. Mark product as PENDING (waiting for seller confirmation)
+        product.setStatus(ProductStatus.PENDING);
+        product.setWinnerId(buyer.getId());
         productRepository.save(product);
 
         return new BuyResponse(
@@ -113,6 +115,83 @@ public class ProductService {
                 buyer.getName(),
                 "Purchase successful! You bought " + product.getName(),
                 LocalDateTime.now()
+        );
+    }
+    // ─── Get Unavailable Products (SOLD + EXPIRED) ───────────────────
+    public List<ProductResponse> getUnavailableProducts() {
+        return productRepository.findByStatusIn(
+                        java.util.List.of(
+                                Product.ProductStatus.SOLD,
+                                Product.ProductStatus.EXPIRED,
+                                Product.ProductStatus.PENDING
+                        ))
+                .stream()
+                .map(ProductResponse::from)
+                .collect(Collectors.toList());
+    }
+
+    // ─── Confirm Sale (seller only) ──────────────────────────────────
+    public String confirmSale(Long productId, UserDetails userDetails) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
+
+        // Only seller can confirm
+        User seller = userRepository.findByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (!product.getSeller().getId().equals(seller.getId())) {
+            throw new RuntimeException("Only the seller can confirm the sale");
+        }
+
+        // Must be PENDING status
+        if (product.getStatus() != Product.ProductStatus.PENDING) {
+            throw new RuntimeException("Product is not in PENDING status");
+        }
+
+        // Mark as SOLD
+        product.setStatus(Product.ProductStatus.SOLD);
+        productRepository.save(product);
+
+        return "Sale confirmed successfully";
+    }
+    // ─── Get Products Won by User ────────────────────────────────────
+    public List<ProductResponse> getWonProducts(UserDetails userDetails) {
+        User user = userRepository.findByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        return productRepository.findByWinnerIdAndStatus(
+                        user.getId(), Product.ProductStatus.SOLD)
+                .stream()
+                .map(ProductResponse::from)
+                .collect(Collectors.toList());
+    }
+    // ─── Get Contact Details (seller or winner only) ─────────────────
+    public ContactResponse getContacts(Long productId, UserDetails userDetails) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
+
+        if (product.getStatus() != Product.ProductStatus.SOLD) {
+            throw new RuntimeException("Contacts are only available after sale is confirmed");
+        }
+
+        User requester = userRepository.findByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        User seller = product.getSeller();
+
+        User winner = userRepository.findById(product.getWinnerId())
+                .orElseThrow(() -> new RuntimeException("Winner not found"));
+
+        boolean isSeller = seller.getId().equals(requester.getId());
+        boolean isWinner = winner.getId().equals(requester.getId());
+
+        if (!isSeller && !isWinner) {
+            throw new RuntimeException("You are not authorized to view contact details");
+        }
+
+        return new ContactResponse(
+                seller.getName(), seller.getEmail(), seller.getMobile(),
+                winner.getName(), winner.getEmail(), winner.getMobile()
         );
     }
 }

@@ -14,7 +14,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     // Used by ProductService — get all active products
     List<Product> findByStatus(Product.ProductStatus status);
 
-    // Used by ProductService — get products by seller object
+    // Used by ProductService — get products by seller
     List<Product> findBySeller(User seller);
 
     // Used by AuctionScheduler — find expired auctions
@@ -22,4 +22,13 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             Product.ProductStatus status,
             LocalDateTime time
     );
+
+    // Used by UserService — get products won by a user
+    List<Product> findByWinnerIdAndStatus(
+            Long winnerId,
+            Product.ProductStatus status
+    );
+
+    // Used by ProductService — get unavailable products (SOLD + EXPIRED)
+    List<Product> findByStatusIn(List<Product.ProductStatus> statuses);
 }

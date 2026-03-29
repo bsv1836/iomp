@@ -9,7 +9,6 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-
 public class User {
 
     @Id
@@ -24,4 +23,14 @@ public class User {
     private String password;
 
     private String role;
+
+    // ─── New Fields ──────────────────────────────────────────────────
+    @Column(length = 15)
+    private String mobile;
+
+    @Column(length = 100)
+    private String location;
+
+    @Column(name = "profile_photo", length = 500)
+    private String profilePhoto;
 }

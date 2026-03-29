@@ -42,6 +42,7 @@ public class SecurityConfig {
                 .authenticationProvider(authenticationProvider())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/users/register", "/api/users/login").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/products/*/contacts").authenticated()
                         .requestMatchers(HttpMethod.GET, "/api/products", "/api/products/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/bids/*/highest").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/bids/my-bids").authenticated()
@@ -51,6 +52,12 @@ public class SecurityConfig {
                         .requestMatchers("/ws/**").permitAll()
                         .requestMatchers("/uploads/**").permitAll()
                         .requestMatchers("/api/images/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/users/profile").authenticated()
+                        .requestMatchers(HttpMethod.PUT, "/api/users/profile").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/api/users/notifications").authenticated()
+                        .requestMatchers(HttpMethod.PUT, "/api/users/notifications/read").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/api/products/unavailable").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/products/*/confirm-sale").authenticated()
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 

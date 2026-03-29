@@ -59,4 +59,40 @@ public class ProductController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+    // ─── GET /api/products/unavailable — SOLD + EXPIRED products ─────
+    @GetMapping("/unavailable")
+    public ResponseEntity<List<ProductResponse>> getUnavailableProducts() {
+        return ResponseEntity.ok(productService.getUnavailableProducts());
+    }
+
+    // ─── POST /api/products/{id}/confirm-sale — Seller confirms ──────
+    @PostMapping("/{productId}/confirm-sale")
+    public ResponseEntity<?> confirmSale(
+            @PathVariable Long productId,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        try {
+            return ResponseEntity.ok(
+                    productService.confirmSale(productId, userDetails));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+    // ─── GET /api/products/won — Products won by logged in user ──────
+    @GetMapping("/won")
+    public ResponseEntity<List<ProductResponse>> getWonProducts(
+            @AuthenticationPrincipal UserDetails userDetails) {
+        return ResponseEntity.ok(productService.getWonProducts(userDetails));
+    }
+    // ─── GET /api/products/{id}/contacts — Seller or Winner only ─────
+    @GetMapping("/{productId}/contacts")
+    public ResponseEntity<?> getContacts(
+            @PathVariable Long productId,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        try {
+            return ResponseEntity.ok(
+                    productService.getContacts(productId, userDetails));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 }
