@@ -30,19 +30,31 @@ function Register() {
 
     return (
         <div style={styles.page}>
+            {/* Left Panel */}
             <div style={styles.left}>
-                <div style={styles.brand}>🛒 Digital Marketplace</div>
-                <h1 style={styles.tagline}>Start Buying<br />& Selling Today</h1>
-                <p style={styles.taglineSub}>
-                    Create a free account and join our marketplace. List products for auction or direct sale in minutes.
-                </p>
-                <div style={styles.features}>
-                    <div style={styles.feature}>✅ Free to join</div>
-                    <div style={styles.feature}>✅ Buy and sell anything</div>
-                    <div style={styles.feature}>✅ Real-time bidding</div>
-                    <div style={styles.feature}>✅ Secure transactions</div>
+                <div style={styles.leftInner}>
+                    <p style={styles.brand}>BidBazaar</p>
+                    <h1 style={styles.tagline}>Start Buying<br />& Selling Today</h1>
+                    <p style={styles.taglineSub}>
+                        Create a free account and join our marketplace. List products for auction or direct sale in minutes.
+                    </p>
+                    <div style={styles.features}>
+                        {[
+                            'Free to join',
+                            'Buy and sell anything',
+                            'Real-time bidding',
+                            'Secure transactions',
+                        ].map(f => (
+                            <div key={f} style={styles.featureItem}>
+                                <div style={styles.featureDot} />
+                                <span style={styles.featureText}>{f}</span>
+                            </div>
+                        ))}
+                    </div>
                 </div>
             </div>
+
+            {/* Right Panel */}
             <div style={styles.right}>
                 <div style={styles.card}>
                     <h2 style={styles.title}>Create account</h2>
@@ -50,35 +62,35 @@ function Register() {
 
                     {error && <div style={styles.error}>{error}</div>}
 
-                    <form onSubmit={handleSubmit}>
-                        <div style={styles.field}>
-                            <label style={styles.label}>Full Name</label>
-                            <input
-                                name="name" type="text"
-                                placeholder="John Doe"
-                                value={form.name} onChange={handleChange}
-                                style={styles.input} required
-                            />
-                        </div>
-                        <div style={styles.field}>
-                            <label style={styles.label}>Email</label>
-                            <input
-                                name="email" type="email"
-                                placeholder="you@gmail.com"
-                                value={form.email} onChange={handleChange}
-                                style={styles.input} required
-                            />
-                        </div>
-                        <div style={styles.field}>
+                    <div style={styles.field}>
+                        <label style={styles.label}>Full Name</label>
+                        <input
+                            name="name" type="text"
+                            placeholder="John Doe"
+                            value={form.name} onChange={handleChange}
+                            style={styles.input} required
+                        />
+                    </div>
+                    <div style={styles.field}>
+                        <label style={styles.label}>Email</label>
+                        <input
+                            name="email" type="email"
+                            placeholder="you@gmail.com"
+                            value={form.email} onChange={handleChange}
+                            style={styles.input} required
+                        />
+                    </div>
+                    <div style={styles.row}>
+                        <div style={{ ...styles.field, flex: 1 }}>
                             <label style={styles.label}>Mobile Number</label>
                             <input
                                 name="mobile" type="tel"
-                                placeholder="e.g. 9876543210"
+                                placeholder="9876543210"
                                 value={form.mobile} onChange={handleChange}
                                 style={styles.input} required
                             />
                         </div>
-                        <div style={styles.field}>
+                        <div style={{ ...styles.field, flex: 1 }}>
                             <label style={styles.label}>Password</label>
                             <input
                                 name="password" type="password"
@@ -87,10 +99,15 @@ function Register() {
                                 style={styles.input} required
                             />
                         </div>
-                        <button type="submit" style={styles.button} disabled={loading}>
-                            {loading ? 'Creating account...' : 'Create Account →'}
-                        </button>
-                    </form>
+                    </div>
+
+                    <button
+                        onClick={handleSubmit}
+                        style={styles.button}
+                        disabled={loading}
+                    >
+                        {loading ? 'Creating account...' : 'Create Account →'}
+                    </button>
 
                     <p style={styles.footer}>
                         Already have an account?{' '}
@@ -105,104 +122,114 @@ function Register() {
 const styles = {
     page: {
         minHeight: '100vh',
+        width: '100vw',
         display: 'grid',
         gridTemplateColumns: '1fr 1fr',
-        backgroundColor: '#0a0a15',
+        backgroundColor: '#FDFBD4',
     },
     left: {
+        backgroundColor: '#38240D',
         display: 'flex',
-        flexDirection: 'column',
+        alignItems: 'center',
         justifyContent: 'center',
         padding: '60px',
-        backgroundColor: '#0d0d1a',
-        borderRight: '1px solid #1e1e3a',
     },
+    leftInner: { maxWidth: '400px' },
     brand: {
-        color: '#e94560',
-        fontSize: '16px',
-        fontWeight: '700',
-        marginBottom: '40px',
+        color: '#FDFBD4',
+        fontSize: '22px',
+        fontWeight: '500',
+        marginBottom: '48px',
+        letterSpacing: '0.3px',
     },
     tagline: {
-        color: 'white',
-        fontSize: '42px',
-        fontWeight: '800',
+        color: '#FDFBD4',
+        fontSize: '40px',
+        fontWeight: '500',
         lineHeight: '1.2',
         margin: '0 0 20px 0',
     },
     taglineSub: {
-        color: '#8888aa',
-        fontSize: '16px',
-        lineHeight: '1.7',
-        maxWidth: '360px',
-        margin: '0 0 32px 0',
+        color: '#c9b89a',
+        fontSize: '15px',
+        lineHeight: '1.8',
+        margin: '0 0 40px 0',
     },
-    features: { display: 'flex', flexDirection: 'column', gap: '10px' },
-    feature: { color: '#aaaacc', fontSize: '14px' },
+    features: { display: 'flex', flexDirection: 'column', gap: '14px' },
+    featureItem: { display: 'flex', alignItems: 'center', gap: '12px' },
+    featureDot: {
+        width: '7px', height: '7px',
+        borderRadius: '50%',
+        backgroundColor: '#C05800',
+        flexShrink: 0,
+    },
+    featureText: { color: '#c9b89a', fontSize: '14px' },
     right: {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         padding: '40px',
+        backgroundColor: '#FDFBD4',
     },
-    card: { width: '100%', maxWidth: '380px' },
+    card: { width: '100%', maxWidth: '400px' },
     title: {
-        color: 'white',
+        color: '#38240D',
         fontSize: '26px',
-        fontWeight: '700',
+        fontWeight: '500',
         margin: '0 0 6px 0',
     },
     subtitle: {
-        color: '#8888aa',
-        fontSize: '15px',
+        color: '#9a7a5a',
+        fontSize: '14px',
         margin: '0 0 28px 0',
     },
     error: {
-        backgroundColor: '#ff000022',
-        color: '#ff6b6b',
+        backgroundColor: '#ff000015',
+        color: '#a33000',
         padding: '12px',
         borderRadius: '8px',
         marginBottom: '20px',
-        fontSize: '14px',
+        fontSize: '13px',
+        border: '0.5px solid #ff000030',
     },
-    field: { marginBottom: '18px' },
+    row: { display: 'flex', gap: '12px' },
+    field: { marginBottom: '16px' },
     label: {
         display: 'block',
-        color: '#aaaacc',
+        color: '#713600',
         fontSize: '13px',
-        fontWeight: '500',
-        marginBottom: '8px',
+        marginBottom: '7px',
     },
     input: {
         width: '100%',
-        padding: '12px 14px',
+        padding: '11px 14px',
         borderRadius: '8px',
-        border: '1px solid #2a2a4a',
-        backgroundColor: '#12121f',
-        color: 'white',
+        border: '0.5px solid #d4c8b0',
+        backgroundColor: '#ffffff',
+        color: '#38240D',
         fontSize: '14px',
         boxSizing: 'border-box',
         outline: 'none',
     },
     button: {
         width: '100%',
-        padding: '13px',
-        backgroundColor: '#e94560',
-        color: 'white',
+        padding: '12px',
+        backgroundColor: '#C05800',
+        color: '#FDFBD4',
         border: 'none',
         borderRadius: '8px',
-        fontSize: '15px',
-        fontWeight: '600',
+        fontSize: '14px',
+        fontWeight: '500',
         cursor: 'pointer',
-        marginTop: '8px',
+        marginTop: '4px',
     },
     footer: {
-        color: '#8888aa',
+        color: '#9a7a5a',
         textAlign: 'center',
         marginTop: '24px',
-        fontSize: '14px',
+        fontSize: '13px',
     },
-    link: { color: '#e94560', textDecoration: 'none', fontWeight: '500' },
+    link: { color: '#C05800', textDecoration: 'none', fontWeight: '500' },
 }
 
 export default Register

@@ -1,5 +1,5 @@
 import { Link, useNavigate, useLocation } from 'react-router-dom'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import API from '../api/axios'
 
 function Navbar() {
@@ -10,10 +10,21 @@ function Navbar() {
     const [unreadCount, setUnreadCount] = useState(0)
     const [notifications, setNotifications] = useState([])
     const [showBell, setShowBell] = useState(false)
+    const bellRef = useRef(null)
 
     useEffect(() => {
         if (token) fetchNotifications()
     }, [token, location.pathname])
+
+    useEffect(() => {
+        const handleClickOutside = (e) => {
+            if (bellRef.current && !bellRef.current.contains(e.target)) {
+                setShowBell(false)
+            }
+        }
+        document.addEventListener('mousedown', handleClickOutside)
+        return () => document.removeEventListener('mousedown', handleClickOutside)
+    }, [])
 
     const fetchNotifications = async () => {
         try {
@@ -49,7 +60,7 @@ function Navbar() {
         <nav style={styles.nav}>
             <div style={styles.left}>
                 <Link to="/products" style={styles.brand}>
-                    🛒 <span style={styles.brandText}>Digital Marketplace</span>
+                    BidBazaar
                 </Link>
                 <Link to="/products" style={{
                     ...styles.navLink,
@@ -60,16 +71,18 @@ function Navbar() {
             <div style={styles.right}>
                 {token ? (
                     <>
-                        {/* Bell Icon */}
-                        <div style={styles.bellWrapper}>
+                        {/* Bell */}
+                        <div style={styles.bellWrapper} ref={bellRef}>
                             <button style={styles.bellButton} onClick={handleBellClick}>
-                                🔔
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FDFBD4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                                    <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                                </svg>
                                 {unreadCount > 0 && (
                                     <span style={styles.badge}>{unreadCount}</span>
                                 )}
                             </button>
 
-                            {/* Notifications Dropdown */}
                             {showBell && (
                                 <div style={styles.dropdown}>
                                     <p style={styles.dropdownTitle}>Notifications</p>
@@ -81,7 +94,7 @@ function Navbar() {
                                                 key={n.id}
                                                 style={{
                                                     ...styles.notifItem,
-                                                    backgroundColor: n.read ? 'transparent' : '#e9456011'
+                                                    backgroundColor: n.read ? 'transparent' : '#C0580011'
                                                 }}
                                                 onClick={() => {
                                                     setShowBell(false)
@@ -101,12 +114,15 @@ function Navbar() {
 
                         {/* Profile */}
                         <Link to="/profile" style={styles.profileLink}>
-                            👤 {userName}
+                            <div style={styles.avatar}>
+                                {userName?.charAt(0).toUpperCase()}
+                            </div>
+                            <span style={styles.userName}>{userName}</span>
                         </Link>
 
-                        {/* Sell Button */}
+                        {/* Sell */}
                         <Link to="/sell" style={styles.sellButton}>
-                            + Sell Product
+                            + Sell
                         </Link>
 
                         {/* Logout */}
@@ -117,7 +133,7 @@ function Navbar() {
                 ) : (
                     <>
                         <Link to="/login" style={styles.navLink}>Login</Link>
-                        <Link to="/register" style={styles.registerButton}>
+                        <Link to="/register" style={styles.sellButton}>
                             Get Started
                         </Link>
                     </>
@@ -133,103 +149,119 @@ const styles = {
         justifyContent: 'space-between',
         alignItems: 'center',
         padding: '0 32px',
-        height: '64px',
-        backgroundColor: '#0d0d1a',
-        borderBottom: '1px solid #1e1e3a',
+        height: '60px',
+        backgroundColor: '#38240D',
         position: 'sticky',
         top: 0,
         zIndex: 100,
     },
     left: { display: 'flex', alignItems: 'center', gap: '32px' },
-    brand: { textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '8px' },
-    brandText: { color: 'white', fontWeight: '700', fontSize: '18px' },
-    navLink: { color: '#8888aa', textDecoration: 'none', fontSize: '14px', fontWeight: '500' },
-    activeLink: { color: 'white' },
+    brand: {
+        textDecoration: 'none',
+        color: '#FDFBD4',
+        fontWeight: '500',
+        fontSize: '20px',
+        letterSpacing: '0.3px',
+    },
+    navLink: {
+        color: '#c9b89a',
+        textDecoration: 'none',
+        fontSize: '14px',
+    },
+    activeLink: { color: '#FDFBD4' },
     right: { display: 'flex', alignItems: 'center', gap: '16px' },
     bellWrapper: { position: 'relative' },
     bellButton: {
         background: 'transparent',
         border: 'none',
-        fontSize: '20px',
         cursor: 'pointer',
         position: 'relative',
-        padding: '4px',
+        padding: '6px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
     },
     badge: {
         position: 'absolute',
-        top: '-4px',
-        right: '-4px',
-        backgroundColor: '#e94560',
-        color: 'white',
+        top: '0px',
+        right: '0px',
+        backgroundColor: '#C05800',
+        color: '#FDFBD4',
         borderRadius: '50%',
-        width: '18px',
-        height: '18px',
-        fontSize: '11px',
-        fontWeight: '700',
+        width: '16px',
+        height: '16px',
+        fontSize: '10px',
+        fontWeight: '600',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
     },
     dropdown: {
         position: 'absolute',
-        top: '40px',
+        top: '44px',
         right: 0,
-        width: '320px',
-        backgroundColor: '#12121f',
-        border: '1px solid #1e1e3a',
+        width: '300px',
+        backgroundColor: '#fff',
+        border: '0.5px solid #e8e0d0',
         borderRadius: '12px',
-        boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
+        boxShadow: '0 8px 24px rgba(56,36,13,0.12)',
         zIndex: 200,
         overflow: 'hidden',
     },
     dropdownTitle: {
-        color: 'white',
-        fontWeight: '600',
-        fontSize: '14px',
-        padding: '14px 16px',
-        borderBottom: '1px solid #1e1e3a',
+        color: '#38240D',
+        fontWeight: '500',
+        fontSize: '13px',
+        padding: '12px 16px',
+        borderBottom: '0.5px solid #e8e0d0',
         margin: 0,
     },
-    emptyNote: { color: '#8888aa', fontSize: '13px', padding: '16px', margin: 0 },
+    emptyNote: { color: '#9a7a5a', fontSize: '13px', padding: '16px', margin: 0 },
     notifItem: {
         padding: '12px 16px',
-        borderBottom: '1px solid #1e1e3a',
+        borderBottom: '0.5px solid #e8e0d0',
         cursor: 'pointer',
     },
-    notifText: { color: '#aaaacc', fontSize: '13px', margin: '0 0 4px 0', lineHeight: '1.5' },
-    notifTime: { color: '#8888aa', fontSize: '11px', margin: 0 },
+    notifText: { color: '#38240D', fontSize: '13px', margin: '0 0 4px 0', lineHeight: '1.5' },
+    notifTime: { color: '#9a7a5a', fontSize: '11px', margin: 0 },
     profileLink: {
-        color: '#aaaacc',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '8px',
         textDecoration: 'none',
-        fontSize: '14px',
+    },
+    avatar: {
+        width: '30px',
+        height: '30px',
+        borderRadius: '50%',
+        backgroundColor: '#C05800',
+        color: '#FDFBD4',
+        fontSize: '13px',
         fontWeight: '500',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    userName: {
+        color: '#FDFBD4',
+        fontSize: '13px',
     },
     sellButton: {
-        backgroundColor: '#e94560',
-        color: 'white',
+        backgroundColor: '#C05800',
+        color: '#FDFBD4',
         textDecoration: 'none',
-        padding: '8px 18px',
-        borderRadius: '8px',
-        fontSize: '14px',
-        fontWeight: '600',
+        padding: '7px 16px',
+        borderRadius: '7px',
+        fontSize: '13px',
     },
     logoutButton: {
         backgroundColor: 'transparent',
-        color: '#8888aa',
-        border: '1px solid #2a2a4a',
-        padding: '7px 16px',
-        borderRadius: '8px',
-        fontSize: '14px',
+        color: '#c9b89a',
+        border: '0.5px solid #6b4c2a',
+        padding: '6px 14px',
+        borderRadius: '7px',
+        fontSize: '13px',
         cursor: 'pointer',
-    },
-    registerButton: {
-        backgroundColor: '#e94560',
-        color: 'white',
-        textDecoration: 'none',
-        padding: '8px 18px',
-        borderRadius: '8px',
-        fontSize: '14px',
-        fontWeight: '600',
     },
 }
 
