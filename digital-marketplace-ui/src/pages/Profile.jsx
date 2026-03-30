@@ -77,13 +77,12 @@ function Profile() {
             <Navbar />
             <div style={styles.container}>
 
-                {/* ── Profile Card ── */}
+                {/* Profile Card */}
                 <div style={styles.profileCard}>
-                    <div style={styles.avatarBox}>
-                        <div style={styles.avatar}>
-                            {profile?.name?.charAt(0).toUpperCase()}
-                        </div>
+                    <div style={styles.avatar}>
+                        {profile?.name?.charAt(0).toUpperCase()}
                     </div>
+
                     <div style={styles.profileInfo}>
                         {editing ? (
                             <div style={styles.editForm}>
@@ -127,7 +126,7 @@ function Profile() {
                                 {profile?.mobile && <p style={styles.profileMeta}>📱 {profile.mobile}</p>}
                                 {profile?.location && <p style={styles.profileMeta}>📍 {profile.location}</p>}
                                 <button onClick={() => setEditing(true)} style={styles.editBtn}>
-                                    ✏️ Edit Profile
+                                    Edit Profile
                                 </button>
                             </>
                         )}
@@ -142,7 +141,7 @@ function Profile() {
                         </div>
                         <div style={styles.stat}>
                             <span style={styles.statNum}>{wonProducts.length}</span>
-                            <span style={styles.statLabel}>Won/Bought</span>
+                            <span style={styles.statLabel}>Won / Bought</span>
                         </div>
                         <div style={styles.stat}>
                             <span style={styles.statNum}>{myBids.length}</span>
@@ -151,19 +150,16 @@ function Profile() {
                     </div>
                 </div>
 
-                {/* ── Tabs ── */}
+                {/* Tabs */}
                 <div style={styles.tabs}>
                     {[
-                        { key: 'listed', label: '📦 My Listings' },
-                        { key: 'won', label: '🏆 Won / Bought' },
-                        { key: 'bids', label: '🔨 Bid History' },
+                        { key: 'listed', label: 'My Listings' },
+                        { key: 'won', label: 'Won / Bought' },
+                        { key: 'bids', label: 'Bid History' },
                     ].map(tab => (
                         <button
                             key={tab.key}
-                            style={{
-                                ...styles.tab,
-                                ...(activeTab === tab.key ? styles.activeTab : {})
-                            }}
+                            style={{ ...styles.tab, ...(activeTab === tab.key ? styles.activeTab : {}) }}
                             onClick={() => setActiveTab(tab.key)}
                         >
                             {tab.label}
@@ -171,43 +167,34 @@ function Profile() {
                     ))}
                 </div>
 
-                {/* ── Tab Content ── */}
-                <div style={styles.tabContent}>
-
+                {/* Tab Content */}
+                <div>
                     {/* My Listings */}
                     {activeTab === 'listed' && (
-                        listedProducts.length === 0 ? (
-                            <EmptyState text="You haven't listed any products yet." />
-                        ) : (
-                            <div style={styles.productList}>
+                        listedProducts.length === 0 ? <EmptyState text="You haven't listed any products yet." /> : (
+                            <div style={styles.list}>
                                 {listedProducts.map(p => (
-                                    <div key={p.productId} style={styles.productCard}>
-                                        {p.imagePath && (
-                                            <img src={p.imagePath} alt={p.name} style={styles.productImg} />
-                                        )}
-                                        <div style={styles.productInfo}>
-                                            <h3 style={styles.productName}>{p.name}</h3>
-                                            <p style={styles.productMeta}>
-                                                ₹{p.currentPrice?.toLocaleString()} •
+                                    <div key={p.productId} style={styles.itemCard}>
+                                        {p.imagePath && <img src={p.imagePath} alt={p.name} style={styles.itemImg} />}
+                                        <div style={styles.itemInfo}>
+                                            <h3 style={styles.itemName}>{p.name}</h3>
+                                            <p style={styles.itemMeta}>
+                                                ₹{p.currentPrice?.toLocaleString()} &nbsp;·&nbsp;
                                                 <span style={{
-                                                    color: p.status === 'ACTIVE' ? '#00b09b' :
-                                                        p.status === 'PENDING' ? '#ffa500' :
-                                                            p.status === 'SOLD' ? '#e94560' : '#8888aa'
-                                                }}> {p.status}</span>
+                                                    color: p.status === 'ACTIVE' ? '#3a7a3a' :
+                                                        p.status === 'PENDING' ? '#C05800' :
+                                                            p.status === 'SOLD' ? '#713600' : '#9a7a5a'
+                                                }}>
+                                                    {p.status}
+                                                </span>
                                             </p>
                                             {p.status === 'PENDING' && (
-                                                <button
-                                                    style={styles.confirmBtn}
-                                                    onClick={() => handleConfirmSale(p.productId)}
-                                                >
-                                                    ✅ Confirm Sale
+                                                <button style={styles.confirmBtn} onClick={() => handleConfirmSale(p.productId)}>
+                                                    Confirm Sale
                                                 </button>
                                             )}
                                         </div>
-                                        <button
-                                            style={styles.viewBtn}
-                                            onClick={() => navigate(`/products/${p.productId}`)}
-                                        >
+                                        <button style={styles.viewBtn} onClick={() => navigate(`/products/${p.productId}`)}>
                                             View →
                                         </button>
                                     </div>
@@ -218,26 +205,19 @@ function Profile() {
 
                     {/* Won / Bought */}
                     {activeTab === 'won' && (
-                        wonProducts.length === 0 ? (
-                            <EmptyState text="You haven't won or bought any products yet." />
-                        ) : (
-                            <div style={styles.productList}>
+                        wonProducts.length === 0 ? <EmptyState text="You haven't won or bought any products yet." /> : (
+                            <div style={styles.list}>
                                 {wonProducts.map(p => (
-                                    <div key={p.productId} style={styles.productCard}>
-                                        {p.imagePath && (
-                                            <img src={p.imagePath} alt={p.name} style={styles.productImg} />
-                                        )}
-                                        <div style={styles.productInfo}>
-                                            <h3 style={styles.productName}>{p.name}</h3>
-                                            <p style={styles.productMeta}>
-                                                ₹{p.currentPrice?.toLocaleString()} •
-                                                <span style={{ color: '#e94560' }}> {p.saleType}</span>
+                                    <div key={p.productId} style={styles.itemCard}>
+                                        {p.imagePath && <img src={p.imagePath} alt={p.name} style={styles.itemImg} />}
+                                        <div style={styles.itemInfo}>
+                                            <h3 style={styles.itemName}>{p.name}</h3>
+                                            <p style={styles.itemMeta}>
+                                                ₹{p.currentPrice?.toLocaleString()} &nbsp;·&nbsp;
+                                                <span style={{ color: '#C05800' }}>{p.saleType}</span>
                                             </p>
                                         </div>
-                                        <button
-                                            style={styles.viewBtn}
-                                            onClick={() => navigate(`/products/${p.productId}`)}
-                                        >
+                                        <button style={styles.viewBtn} onClick={() => navigate(`/products/${p.productId}`)}>
                                             View →
                                         </button>
                                     </div>
@@ -248,26 +228,17 @@ function Profile() {
 
                     {/* Bid History */}
                     {activeTab === 'bids' && (
-                        myBids.length === 0 ? (
-                            <EmptyState text="You haven't placed any bids yet." />
-                        ) : (
-                            <div style={styles.bidList}>
+                        myBids.length === 0 ? <EmptyState text="You haven't placed any bids yet." /> : (
+                            <div style={styles.list}>
                                 {myBids.map(bid => (
                                     <div key={bid.bidId} style={styles.bidCard}>
                                         <div>
-                                            <p style={styles.bidProduct}>{bid.productName}</p>
-                                            <p style={styles.bidTime}>
-                                                {new Date(bid.timestamp).toLocaleString()}
-                                            </p>
+                                            <p style={styles.itemName}>{bid.productName}</p>
+                                            <p style={styles.bidTime}>{new Date(bid.timestamp).toLocaleString()}</p>
                                         </div>
                                         <div style={styles.bidRight}>
-                      <span style={styles.bidAmount}>
-                        ₹{bid.bidAmount?.toLocaleString()}
-                      </span>
-                                            <button
-                                                style={styles.viewBtn}
-                                                onClick={() => navigate(`/products/${bid.productId}`)}
-                                            >
+                                            <span style={styles.bidAmount}>₹{bid.bidAmount?.toLocaleString()}</span>
+                                            <button style={styles.viewBtn} onClick={() => navigate(`/products/${bid.productId}`)}>
                                                 View →
                                             </button>
                                         </div>
@@ -285,116 +256,106 @@ function Profile() {
 function EmptyState({ text }) {
     return (
         <div style={{
-            textAlign: 'center', padding: '60px 20px',
-            backgroundColor: '#12121f', borderRadius: '12px',
-            border: '1px dashed #2a2a4a',
+            textAlign: 'center', padding: '48px 20px',
+            backgroundColor: '#fff', borderRadius: '12px',
+            border: '0.5px dashed #d4c8b0',
         }}>
-            <p style={{ color: '#8888aa', margin: 0 }}>{text}</p>
+            <p style={{ color: '#9a7a5a', margin: 0, fontSize: '14px' }}>{text}</p>
         </div>
     )
 }
 
 const styles = {
-    page: { backgroundColor: '#0a0a15', minHeight: '100vh' },
-    container: { maxWidth: '900px', margin: '0 auto', padding: '40px 24px' },
-    loading: { color: '#8888aa', padding: '40px', textAlign: 'center' },
+    page: { backgroundColor: '#f7f4ec', minHeight: '100vh' },
+    container: { padding: '36px 48px' },
+    loading: { color: '#9a7a5a', padding: '40px', textAlign: 'center' },
     profileCard: {
-        backgroundColor: '#12121f',
-        borderRadius: '16px',
-        padding: '28px',
-        border: '1px solid #1e1e3a',
-        display: 'flex',
-        alignItems: 'flex-start',
-        gap: '24px',
-        marginBottom: '28px',
-        flexWrap: 'wrap',
+        backgroundColor: '#fff', borderRadius: '16px',
+        padding: '28px', border: '0.5px solid #e8e0d0',
+        display: 'flex', alignItems: 'center',
+        gap: '24px', marginBottom: '28px', flexWrap: 'wrap',
     },
-    avatarBox: { flexShrink: 0 },
     avatar: {
-        width: '72px', height: '72px',
-        borderRadius: '50%',
-        backgroundColor: '#e94560',
-        color: 'white',
-        fontSize: '28px', fontWeight: '700',
+        width: '68px', height: '68px', borderRadius: '50%',
+        backgroundColor: '#38240D', color: '#FDFBD4',
+        fontSize: '26px', fontWeight: '500',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
+        flexShrink: 0,
     },
     profileInfo: { flex: 1, minWidth: '200px' },
-    profileName: { color: 'white', fontSize: '22px', fontWeight: '700', margin: '0 0 6px 0' },
-    profileEmail: { color: '#8888aa', fontSize: '14px', margin: '0 0 4px 0' },
-    profileMeta: { color: '#aaaacc', fontSize: '14px', margin: '0 0 4px 0' },
+    profileName: { color: '#38240D', fontSize: '20px', fontWeight: '500', margin: '0 0 6px 0' },
+    profileEmail: { color: '#9a7a5a', fontSize: '13px', margin: '0 0 4px 0' },
+    profileMeta: { color: '#713600', fontSize: '13px', margin: '0 0 4px 0' },
     editBtn: {
-        marginTop: '12px',
-        backgroundColor: 'transparent',
-        color: '#e94560',
-        border: '1px solid #e9456044',
-        padding: '6px 14px',
-        borderRadius: '6px',
-        fontSize: '13px',
-        cursor: 'pointer',
+        marginTop: '10px', backgroundColor: 'transparent',
+        color: '#C05800', border: '0.5px solid #C0580044',
+        padding: '6px 14px', borderRadius: '6px',
+        fontSize: '13px', cursor: 'pointer',
     },
     editForm: { display: 'flex', flexDirection: 'column', gap: '12px' },
     editRow: { display: 'flex', gap: '12px', flexWrap: 'wrap' },
     editField: { display: 'flex', flexDirection: 'column', gap: '4px', flex: 1, minWidth: '140px' },
-    editLabel: { color: '#8888aa', fontSize: '12px' },
+    editLabel: { color: '#713600', fontSize: '12px' },
     editInput: {
         padding: '8px 12px', borderRadius: '6px',
-        border: '1px solid #2a2a4a', backgroundColor: '#0a0a15',
-        color: 'white', fontSize: '14px', outline: 'none',
+        border: '0.5px solid #d4c8b0', backgroundColor: '#faf9f5',
+        color: '#38240D', fontSize: '14px', outline: 'none',
     },
     editActions: { display: 'flex', gap: '10px' },
     saveBtn: {
-        padding: '8px 18px', backgroundColor: '#e94560',
-        color: 'white', border: 'none', borderRadius: '6px',
+        padding: '8px 18px', backgroundColor: '#C05800',
+        color: '#FDFBD4', border: 'none', borderRadius: '6px',
         fontSize: '13px', cursor: 'pointer',
     },
     cancelBtn: {
         padding: '8px 18px', backgroundColor: 'transparent',
-        color: '#8888aa', border: '1px solid #2a2a4a',
+        color: '#9a7a5a', border: '0.5px solid #d4c8b0',
         borderRadius: '6px', fontSize: '13px', cursor: 'pointer',
     },
-    saveMsg: { color: '#00b09b', fontSize: '13px', margin: '8px 0 0 0' },
-    stats: { display: 'flex', gap: '24px', marginLeft: 'auto' },
+    saveMsg: { color: '#3a7a3a', fontSize: '13px', margin: '8px 0 0 0' },
+    stats: { display: 'flex', gap: '32px', marginLeft: 'auto' },
     stat: { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' },
-    statNum: { color: '#e94560', fontSize: '24px', fontWeight: '700' },
-    statLabel: { color: '#8888aa', fontSize: '12px' },
+    statNum: { color: '#C05800', fontSize: '24px', fontWeight: '500' },
+    statLabel: { color: '#9a7a5a', fontSize: '12px' },
     tabs: { display: 'flex', gap: '4px', marginBottom: '20px' },
     tab: {
-        padding: '10px 20px', backgroundColor: 'transparent',
-        color: '#8888aa', border: '1px solid #1e1e3a',
-        borderRadius: '8px', fontSize: '14px', cursor: 'pointer',
+        padding: '9px 20px', backgroundColor: '#fff',
+        color: '#9a7a5a', border: '0.5px solid #e8e0d0',
+        borderRadius: '8px', fontSize: '13px', cursor: 'pointer',
     },
-    activeTab: { backgroundColor: '#e94560', color: 'white', border: '1px solid #e94560' },
-    tabContent: {},
-    productList: { display: 'flex', flexDirection: 'column', gap: '12px' },
-    productCard: {
-        backgroundColor: '#12121f', borderRadius: '12px',
-        padding: '16px 20px', border: '1px solid #1e1e3a',
-        display: 'flex', alignItems: 'center', gap: '16px',
+    activeTab: {
+        backgroundColor: '#38240D', color: '#FDFBD4',
+        border: '0.5px solid #38240D',
     },
-    productImg: { width: '60px', height: '60px', borderRadius: '8px', objectFit: 'cover' },
-    productInfo: { flex: 1 },
-    productName: { color: 'white', fontSize: '15px', fontWeight: '600', margin: '0 0 4px 0' },
-    productMeta: { color: '#8888aa', fontSize: '13px', margin: '0 0 8px 0' },
+    list: { display: 'flex', flexDirection: 'column', gap: '10px' },
+    itemCard: {
+        backgroundColor: '#fff', borderRadius: '12px',
+        padding: '14px 18px', border: '0.5px solid #e8e0d0',
+        display: 'flex', alignItems: 'center', gap: '14px',
+    },
+    itemImg: { width: '52px', height: '52px', borderRadius: '8px', objectFit: 'cover', flexShrink: 0 },
+    itemInfo: { flex: 1 },
+    itemName: { color: '#38240D', fontSize: '14px', fontWeight: '500', margin: '0 0 4px 0' },
+    itemMeta: { color: '#9a7a5a', fontSize: '13px', margin: '0 0 6px 0' },
     confirmBtn: {
-        padding: '6px 14px', backgroundColor: '#00b09b',
-        color: 'white', border: 'none', borderRadius: '6px',
-        fontSize: '13px', cursor: 'pointer', fontWeight: '600',
+        padding: '5px 12px', backgroundColor: '#C05800',
+        color: '#FDFBD4', border: 'none', borderRadius: '6px',
+        fontSize: '12px', cursor: 'pointer',
     },
     viewBtn: {
-        padding: '7px 14px', backgroundColor: 'transparent',
-        color: '#e94560', border: '1px solid #e9456044',
+        padding: '6px 14px', backgroundColor: 'transparent',
+        color: '#C05800', border: '0.5px solid #C0580044',
         borderRadius: '6px', fontSize: '13px', cursor: 'pointer',
+        flexShrink: 0,
     },
-    bidList: { display: 'flex', flexDirection: 'column', gap: '10px' },
     bidCard: {
-        backgroundColor: '#12121f', borderRadius: '12px',
-        padding: '16px 20px', border: '1px solid #1e1e3a',
+        backgroundColor: '#fff', borderRadius: '12px',
+        padding: '14px 18px', border: '0.5px solid #e8e0d0',
         display: 'flex', justifyContent: 'space-between', alignItems: 'center',
     },
-    bidProduct: { color: 'white', fontSize: '15px', fontWeight: '600', margin: '0 0 4px 0' },
-    bidTime: { color: '#8888aa', fontSize: '12px', margin: 0 },
+    bidTime: { color: '#9a7a5a', fontSize: '12px', margin: 0 },
     bidRight: { display: 'flex', alignItems: 'center', gap: '16px' },
-    bidAmount: { color: '#e94560', fontSize: '18px', fontWeight: '700' },
+    bidAmount: { color: '#C05800', fontSize: '18px', fontWeight: '500' },
 }
 
 export default Profile

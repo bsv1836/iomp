@@ -35,7 +35,7 @@ function ProductDetail() {
 
     useEffect(() => {
         const client = new Client({
-            webSocketFactory: () => new SockJS('https://iomp-production-099e.up.railway.app/ws'),
+            webSocketFactory: () => new SockJS(`${import.meta.env.VITE_API_URL || 'http://localhost:8080'}/ws`),
             onConnect: () => {
                 client.subscribe(`/topic/bids/${id}`, (msg) => {
                     const data = JSON.parse(msg.body)
