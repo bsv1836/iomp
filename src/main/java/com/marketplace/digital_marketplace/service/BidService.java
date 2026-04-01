@@ -59,7 +59,10 @@ public class BidService {
             throw new RuntimeException("Seller cannot bid on their own product");
         }
 
-        // 7. Bid amount must be >= currentPrice + bidIncrement
+        // 7. Bid amount must not be null and must be >= currentPrice + bidIncrement
+        if (request.getBidAmount() == null) {
+            throw new RuntimeException("Bid amount is required");
+        }
         double minimumBid = product.getCurrentPrice() + product.getBidIncrement();
         if (request.getBidAmount() < minimumBid) {
             throw new RuntimeException(
