@@ -4,6 +4,7 @@ import { Client } from '@stomp/stompjs'
 import SockJS from 'sockjs-client'
 import API from '../api/axios'
 import Navbar from '../components/Navbar'
+import './ProductDetail.css'
 
 const MONTH_NAMES = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
 
@@ -89,8 +90,8 @@ function ProductDetail() {
     }
 
     if (!product) return (
-        <div style={styles.page}><Navbar />
-            <div style={styles.loading}>Loading...</div>
+        <div className="product-detail-page"><Navbar />
+            <div className="product-detail-loading">Loading...</div>
         </div>
     )
 
@@ -98,119 +99,110 @@ function ProductDetail() {
     const minimumBid = product.currentPrice + product.bidIncrement
 
     return (
-        <div style={styles.page}>
+        <div className="product-detail-page">
             <Navbar />
-            <div style={styles.container}>
+            <div className="product-detail-container">
 
                 {/* Winner Banner */}
                 {winner && (
-                    <div style={styles.winnerBanner}>
+                    <div className="product-winner-banner">
                         🏆 Auction closed! Winner: <strong>{winner.bidderName}</strong>
                         {winner.bidAmount && ` — ₹${winner.bidAmount.toLocaleString()}`}
                     </div>
                 )}
 
-                <div style={styles.grid}>
+                <div className="product-detail-grid">
                     {/* Left */}
-                    <div style={styles.left}>
+                    <div className="product-detail-left">
 
                         {/* Image */}
-                        <div style={styles.imageBox}>
+                        <div className="product-detail-image-box">
                             {product.imagePath ? (
-                                <img src={product.imagePath} alt={product.name} style={styles.image} />
+                                <img src={product.imagePath} alt={product.name} className="product-detail-image" />
                             ) : (
-                                <div style={styles.imagePlaceholder}>{isAuction ? '🔨' : '🛍️'}</div>
+                                <div className="product-detail-image-placeholder">{isAuction ? '🔨' : '🛍️'}</div>
                             )}
-                            <span style={{
-                                ...styles.badge,
-                                backgroundColor: isAuction ? '#C0580018' : '#71360018',
-                                color: isAuction ? '#C05800' : '#713600',
-                                border: `0.5px solid ${isAuction ? '#C0580044' : '#71360044'}`,
-                            }}>
+                            <span className={`product-detail-badge ${isAuction ? 'auction' : 'direct'}`}>
                                 {isAuction ? 'AUCTION' : 'DIRECT SALE'}
                             </span>
                         </div>
 
                         {/* Info Card */}
-                        <div style={styles.card}>
-                            <div style={styles.titleRow}>
+                        <div className="product-detail-card">
+                            <div className="product-title-row">
                                 <div>
-                                    <h1 style={styles.title}>{product.name}</h1>
-                                    {product.brand && <p style={styles.brand}>by {product.brand}</p>}
+                                    <h1 className="product-title">{product.name}</h1>
+                                    {product.brand && <p className="product-brand">by {product.brand}</p>}
                                 </div>
-                                <span style={{
-                                    ...styles.statusBadge,
-                                    backgroundColor: product.status === 'ACTIVE' ? '#71360015' : '#9a7a5a15',
-                                    color: product.status === 'ACTIVE' ? '#713600' : '#9a7a5a',
-                                }}>
+                                <span className={`product-status-badge ${product.status === 'ACTIVE' ? 'status-active' : 'status-other'}`}>
                                     {product.status}
                                 </span>
                             </div>
-                            {product.description && <p style={styles.description}>{product.description}</p>}
-                            <div style={styles.chips}>
-                                {product.category && <span style={styles.chip}>📦 {product.category}</span>}
-                                {product.location && <span style={styles.chip}>📍 {product.location}</span>}
-                                {product.productCondition && <span style={styles.chip}>✨ {product.productCondition}</span>}
-                                {product.warrantyRemaining && <span style={styles.chip}>🛡️ {product.warrantyRemaining}</span>}
+                            {product.description && <p className="product-description">{product.description}</p>}
+                            <div className="product-chips">
+                                {product.category && <span className="product-chip">📦 {product.category}</span>}
+                                {product.location && <span className="product-chip">📍 {product.location}</span>}
+                                {product.productCondition && <span className="product-chip">✨ {product.productCondition}</span>}
+                                {product.warrantyRemaining && <span className="product-chip">🛡️ {product.warrantyRemaining}</span>}
                             </div>
                         </div>
 
                         {/* History Card */}
-                        <div style={styles.card}>
-                            <h3 style={styles.cardTitle}>Product History</h3>
-                            <div style={styles.historyGrid}>
+                        <div className="product-detail-card">
+                            <h3 className="product-card-title">Product History</h3>
+                            <div className="product-history-grid">
                                 {product.purchaseMonth && product.purchaseYear && (
-                                    <div style={styles.historyItem}>
-                                        <span style={styles.historyLabel}>Purchased</span>
-                                        <span style={styles.historyValue}>{MONTH_NAMES[product.purchaseMonth - 1]} {product.purchaseYear}</span>
+                                    <div className="product-history-item">
+                                        <span className="product-history-label">Purchased</span>
+                                        <span className="product-history-value">{MONTH_NAMES[product.purchaseMonth - 1]} {product.purchaseYear}</span>
                                     </div>
                                 )}
-                                <div style={styles.historyItem}>
-                                    <span style={styles.historyLabel}>Seller</span>
-                                    <span style={styles.historyValue}>{product.sellerName}</span>
+                                <div className="product-history-item">
+                                    <span className="product-history-label">Seller</span>
+                                    <span className="product-history-value">{product.sellerName}</span>
                                 </div>
-                                <div style={styles.historyItem}>
-                                    <span style={styles.historyLabel}>Listed On</span>
-                                    <span style={styles.historyValue}>{new Date(product.createdAt).toLocaleDateString()}</span>
+                                <div className="product-history-item">
+                                    <span className="product-history-label">Listed On</span>
+                                    <span className="product-history-value">{new Date(product.createdAt).toLocaleDateString()}</span>
                                 </div>
                             </div>
                             {product.damages && (
-                                <div style={styles.damagesBox}>
-                                    <span style={styles.damagesLabel}>⚠️ Damages / Defects</span>
-                                    <p style={styles.damagesText}>{product.damages}</p>
+                                <div className="product-damages-box">
+                                    <span className="product-damages-label">⚠️ Damages / Defects</span>
+                                    <p className="product-damages-text">{product.damages}</p>
                                 </div>
                             )}
                         </div>
                     </div>
 
                     {/* Right */}
-                    <div style={styles.right}>
+                    <div className="product-detail-right">
 
                         {/* Price Card */}
-                        <div style={styles.card}>
-                            <div style={styles.priceRow}>
+                        <div className="product-detail-card">
+                            <div className="product-price-row">
                                 <div>
-                                    <p style={styles.priceLabel}>{isAuction ? 'Current Bid' : 'Price'}</p>
-                                    <p style={styles.price}>₹{product.currentPrice?.toLocaleString()}</p>
+                                    <p className="product-price-label">{isAuction ? 'Current Bid' : 'Price'}</p>
+                                    <p className="product-price-value">₹{product.currentPrice?.toLocaleString()}</p>
                                 </div>
                                 {isAuction && (
                                     <div style={{ textAlign: 'right' }}>
-                                        <p style={styles.priceLabel}>Starting Price</p>
-                                        <p style={styles.startPrice}>₹{product.startingPrice?.toLocaleString()}</p>
+                                        <p className="product-price-label">Starting Price</p>
+                                        <p className="product-start-price">₹{product.startingPrice?.toLocaleString()}</p>
                                     </div>
                                 )}
                             </div>
                             {isAuction && (
                                 <>
-                                    <div style={styles.divider} />
-                                    <div style={styles.auctionMeta}>
+                                    <div className="product-divider" />
+                                    <div className="product-auction-meta">
                                         <div>
-                                            <p style={styles.metaLabel}>Min Next Bid</p>
-                                            <p style={styles.metaValue}>₹{minimumBid?.toLocaleString()}</p>
+                                            <p className="product-meta-label">Min Next Bid</p>
+                                            <p className="product-meta-value">₹{minimumBid?.toLocaleString()}</p>
                                         </div>
                                         <div style={{ textAlign: 'right' }}>
-                                            <p style={styles.metaLabel}>Ends At</p>
-                                            <p style={{ ...styles.metaValue, color: '#C05800' }}>{new Date(product.auctionEndTime).toLocaleString()}</p>
+                                            <p className="product-meta-label">Ends At</p>
+                                            <p className="product-meta-value highlight">{new Date(product.auctionEndTime).toLocaleString()}</p>
                                         </div>
                                     </div>
                                 </>
@@ -219,78 +211,78 @@ function ProductDetail() {
 
                         {/* Highest Bid */}
                         {highestBid && (
-                            <div style={styles.highestBidCard}>
-                                <p style={styles.highestLabel}>Highest Bid</p>
-                                <p style={styles.highestAmount}>₹{highestBid.bidAmount?.toLocaleString()}</p>
-                                <p style={styles.highestBidder}>by {highestBid.bidderName}</p>
+                            <div className="product-highest-bid-card">
+                                <p className="product-highest-label">Highest Bid</p>
+                                <p className="product-highest-amount">₹{highestBid.bidAmount?.toLocaleString()}</p>
+                                <p className="product-highest-bidder">by {highestBid.bidderName}</p>
                             </div>
                         )}
 
                         {/* Action Box */}
                         {product.status === 'ACTIVE' && (
-                            <div style={styles.card}>
+                            <div className="product-detail-card">
                                 {isAuction ? (
                                     <>
-                                        <p style={styles.cardTitle}>Place Your Bid</p>
+                                        <p className="product-card-title">Place Your Bid</p>
                                         <input
                                             type="number"
                                             placeholder={`Minimum ₹${minimumBid?.toLocaleString()}`}
                                             value={bidAmount}
                                             onChange={e => setBidAmount(e.target.value)}
-                                            style={styles.input}
+                                            className="product-bid-input"
                                             min={minimumBid}
                                         />
-                                        <button onClick={handleBid} style={styles.bidButton} disabled={loading}>
+                                        <button onClick={handleBid} className="product-action-btn" disabled={loading}>
                                             {loading ? 'Placing...' : 'Place Bid'}
                                         </button>
                                     </>
                                 ) : (
-                                    <button onClick={handleBuy} style={styles.buyButton} disabled={loading}>
+                                    <button onClick={handleBuy} className="product-action-btn" disabled={loading}>
                                         {loading ? 'Processing...' : `Buy Now — ₹${product.currentPrice?.toLocaleString()}`}
                                     </button>
                                 )}
-                                {message && <p style={styles.success}>{message}</p>}
-                                {error && <p style={styles.errorText}>{error}</p>}
+                                {message && <p className="product-success-text">{message}</p>}
+                                {error && <p className="product-error-text">{error}</p>}
                             </div>
                         )}
 
                         {/* Pending notice */}
                         {product.status === 'PENDING' && !contacts && (
-                            <div style={styles.pendingBox}>
-                                <p style={styles.pendingText}>⏳ Awaiting seller confirmation</p>
+                            <div className="product-pending-box">
+                                <p className="product-pending-text">⏳ Awaiting seller confirmation</p>
                             </div>
                         )}
 
                         {/* Contact Details */}
                         {contacts && (
-                            <div style={styles.contactCard}>
-                                <p style={styles.cardTitle}>Contact Details</p>
-                                <div style={styles.contactSection}>
-                                    <p style={styles.contactRole}>Seller</p>
-                                    <p style={styles.contactItem}>👤 {contacts.sellerName}</p>
-                                    <p style={styles.contactItem}>✉️ {contacts.sellerEmail}</p>
-                                    <p style={styles.contactItem}>📱 {contacts.sellerMobile || 'Not provided'}</p>
+                            <div className="product-contact-card">
+                                <p className="product-card-title">Contact Details</p>
+                                <div className="product-contact-section">
+                                    <p className="product-contact-role">Seller</p>
+                                    <p className="product-contact-item">👤 {contacts.sellerName}</p>
+                                    <p className="product-contact-item">✉️ {contacts.sellerEmail}</p>
+                                    <p className="product-contact-item">📱 {contacts.sellerMobile || 'Not provided'}</p>
                                 </div>
-                                <div style={styles.divider} />
-                                <div style={styles.contactSection}>
-                                    <p style={styles.contactRole}>Buyer</p>
-                                    <p style={styles.contactItem}>👤 {contacts.winnerName}</p>
-                                    <p style={styles.contactItem}>✉️ {contacts.winnerEmail}</p>
-                                    <p style={styles.contactItem}>📱 {contacts.winnerMobile || 'Not provided'}</p>
+                                <div className="product-divider" />
+                                <div className="product-contact-section">
+                                    <p className="product-contact-role">Buyer</p>
+                                    <p className="product-contact-item">👤 {contacts.winnerName}</p>
+                                    <p className="product-contact-item">✉️ {contacts.winnerEmail}</p>
+                                    <p className="product-contact-item">📱 {contacts.winnerMobile || 'Not provided'}</p>
                                 </div>
                             </div>
                         )}
 
                         {/* Live Feed */}
                         {liveMessages.length > 0 && (
-                            <div style={styles.card}>
-                                <p style={{ ...styles.cardTitle, display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                    <span style={styles.liveDot} /> Live Updates
+                            <div className="product-detail-card">
+                                <p className="product-card-title" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                    <span className="product-live-dot" /> Live Updates
                                 </p>
                                 {liveMessages.map((msg, i) => (
-                                    <div key={i} style={styles.liveItem}>
-                                        <span style={styles.liveText}>{msg.text}</span>
-                                        <span style={styles.liveTime}>{msg.time}</span>
+                                    <div key={i} className="product-live-item">
+                                        <span className="product-live-text">{msg.text}</span>
+                                        <span className="product-live-time">{msg.time}</span>
                                     </div>
                                 ))}
                             </div>
@@ -300,118 +292,6 @@ function ProductDetail() {
             </div>
         </div>
     )
-}
-
-const styles = {
-    page: { backgroundColor: '#f7f4ec', minHeight: '100vh' },
-    container: { padding: '36px 48px' },
-    loading: { color: '#9a7a5a', padding: '40px', textAlign: 'center' },
-    winnerBanner: {
-        backgroundColor: '#C0580015',
-        color: '#713600',
-        border: '0.5px solid #C0580044',
-        padding: '14px 20px',
-        borderRadius: '10px',
-        marginBottom: '28px',
-        fontSize: '15px',
-        textAlign: 'center',
-    },
-    grid: { display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '28px', alignItems: 'start' },
-    left: { display: 'flex', flexDirection: 'column', gap: '16px' },
-    right: { display: 'flex', flexDirection: 'column', gap: '14px' },
-    imageBox: {
-        position: 'relative', borderRadius: '14px',
-        overflow: 'hidden', height: '300px',
-        backgroundColor: '#FDFBD4', border: '0.5px solid #e8e0d0',
-    },
-    image: { width: '100%', height: '100%', objectFit: 'cover' },
-    imagePlaceholder: {
-        width: '100%', height: '100%',
-        display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '64px',
-    },
-    badge: {
-        position: 'absolute', top: '14px', left: '14px',
-        padding: '4px 12px', borderRadius: '20px',
-        fontSize: '11px', fontWeight: '600', letterSpacing: '0.4px',
-    },
-    card: {
-        backgroundColor: '#fff', borderRadius: '14px',
-        padding: '22px', border: '0.5px solid #e8e0d0',
-        display: 'flex', flexDirection: 'column', gap: '12px',
-    },
-    titleRow: { display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' },
-    title: { color: '#38240D', fontSize: '24px', fontWeight: '500', margin: 0 },
-    brand: { color: '#9a7a5a', fontSize: '14px', margin: '4px 0 0 0' },
-    statusBadge: { padding: '4px 12px', borderRadius: '20px', fontSize: '12px' },
-    description: { color: '#713600', fontSize: '14px', lineHeight: '1.7', margin: 0 },
-    chips: { display: 'flex', flexWrap: 'wrap', gap: '8px' },
-    chip: {
-        backgroundColor: '#f5f0e8', color: '#713600',
-        padding: '5px 12px', borderRadius: '20px', fontSize: '12px',
-    },
-    cardTitle: { color: '#38240D', fontSize: '15px', fontWeight: '500', margin: 0 },
-    historyGrid: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' },
-    historyItem: { display: 'flex', flexDirection: 'column', gap: '4px' },
-    historyLabel: { color: '#9a7a5a', fontSize: '12px' },
-    historyValue: { color: '#38240D', fontSize: '14px' },
-    damagesBox: {
-        backgroundColor: '#ff000008', border: '0.5px solid #ff000025',
-        borderRadius: '8px', padding: '12px',
-    },
-    damagesLabel: { color: '#a33000', fontSize: '13px' },
-    damagesText: { color: '#713600', fontSize: '13px', margin: '6px 0 0 0' },
-    priceRow: { display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' },
-    priceLabel: { color: '#9a7a5a', fontSize: '12px', margin: '0 0 4px 0' },
-    price: { color: '#C05800', fontSize: '32px', fontWeight: '500', margin: 0 },
-    startPrice: { color: '#9a7a5a', fontSize: '16px', margin: 0 },
-    divider: { height: '0.5px', backgroundColor: '#e8e0d0', margin: '4px 0' },
-    auctionMeta: { display: 'flex', justifyContent: 'space-between' },
-    metaLabel: { color: '#9a7a5a', fontSize: '12px', margin: '0 0 4px 0' },
-    metaValue: { color: '#38240D', fontSize: '14px', margin: 0 },
-    highestBidCard: {
-        backgroundColor: '#C0580010', borderRadius: '14px',
-        padding: '18px', border: '0.5px solid #C0580033', textAlign: 'center',
-    },
-    highestLabel: { color: '#9a7a5a', fontSize: '13px', margin: '0 0 6px 0' },
-    highestAmount: { color: '#C05800', fontSize: '28px', fontWeight: '500', margin: '0 0 4px 0' },
-    highestBidder: { color: '#713600', fontSize: '13px', margin: 0 },
-    input: {
-        width: '100%', padding: '11px 14px', borderRadius: '8px',
-        border: '0.5px solid #d4c8b0', backgroundColor: '#faf9f5',
-        color: '#38240D', fontSize: '14px', boxSizing: 'border-box', outline: 'none',
-    },
-    bidButton: {
-        padding: '12px', backgroundColor: '#C05800', color: '#FDFBD4',
-        border: 'none', borderRadius: '8px', fontSize: '14px', cursor: 'pointer',
-    },
-    buyButton: {
-        padding: '14px', backgroundColor: '#713600', color: '#FDFBD4',
-        border: 'none', borderRadius: '8px', fontSize: '14px', cursor: 'pointer',
-    },
-    success: { color: '#3a7a3a', margin: 0, fontSize: '13px' },
-    errorText: { color: '#a33000', margin: 0, fontSize: '13px' },
-    pendingBox: {
-        backgroundColor: '#C0580010', borderRadius: '10px',
-        padding: '14px', border: '0.5px solid #C0580033', textAlign: 'center',
-    },
-    pendingText: { color: '#C05800', fontSize: '14px', margin: 0 },
-    contactCard: {
-        backgroundColor: '#fff', borderRadius: '14px',
-        padding: '22px', border: '0.5px solid #71360033',
-    },
-    contactSection: { display: 'flex', flexDirection: 'column', gap: '6px', margin: '10px 0' },
-    contactRole: { color: '#713600', fontSize: '12px', fontWeight: '500', margin: '0 0 4px 0', textTransform: 'uppercase', letterSpacing: '0.5px' },
-    contactItem: { color: '#38240D', fontSize: '13px', margin: 0 },
-    liveDot: {
-        width: '8px', height: '8px', borderRadius: '50%',
-        backgroundColor: '#C05800', display: 'inline-block',
-    },
-    liveItem: {
-        display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-        padding: '8px 12px', backgroundColor: '#faf9f5', borderRadius: '6px',
-    },
-    liveText: { color: '#713600', fontSize: '13px' },
-    liveTime: { color: '#9a7a5a', fontSize: '11px' },
 }
 
 export default ProductDetail

@@ -1,0 +1,189 @@
+/* Navbar.css */
+
+.navbar-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 32px;
+    height: 60px;
+    background-color: #000000; /* Minimalist Black */
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.navbar-left {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+}
+
+.navbar-brand {
+    text-decoration: none;
+    color: #FFFFFF;
+    font-weight: 500;
+    font-size: 20px;
+    letter-spacing: 0.3px;
+}
+
+.navbar-link {
+    color: #D1D5DB; /* Gray-300 */
+    text-decoration: none;
+    font-size: 14px;
+    transition: color 0.2s;
+}
+
+.navbar-link:hover {
+    color: #FFFFFF;
+}
+
+.navbar-link.active {
+    color: #FFFFFF;
+}
+
+.navbar-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.bell-wrapper {
+    position: relative;
+}
+
+.bell-button {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    padding: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.bell-badge {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    background-color: #FFFFFF;
+    color: #000000;
+    border-radius: 50%;
+    width: 16px;
+    height: 16px;
+    font-size: 10px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.notif-dropdown {
+    position: absolute;
+    top: 44px;
+    right: 0;
+    width: 300px;
+    background-color: #FFFFFF;
+    border: 1px solid #E5E7EB;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    z-index: 200;
+    overflow: hidden;
+}
+
+.dropdown-title {
+    color: #111827;
+    font-weight: 500;
+    font-size: 13px;
+    padding: 12px 16px;
+    border-bottom: 1px solid #E5E7EB;
+    margin: 0;
+}
+
+.empty-note {
+    color: #6B7280;
+    font-size: 13px;
+    padding: 16px;
+    margin: 0;
+    text-align: center;
+}
+
+.notif-item {
+    padding: 12px 16px;
+    border-bottom: 1px solid #E5E7EB;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+.notif-item:hover {
+    background-color: #F9FAFB;
+}
+.notif-item.unread {
+    background-color: #F3F4F6;
+}
+
+.notif-text {
+    color: #111827;
+    font-size: 13px;
+    margin: 0 0 4px 0;
+    line-height: 1.5;
+}
+
+.notif-time {
+    color: #6B7280;
+    font-size: 11px;
+    margin: 0;
+}
+
+.profile-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+}
+
+.avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: #FFFFFF;
+    color: #000000;
+    font-size: 13px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.user-name {
+    color: #FFFFFF;
+    font-size: 13px;
+}
+
+.sell-button {
+    background-color: #FFFFFF;
+    color: #000000;
+    text-decoration: none;
+    padding: 7px 16px;
+    border-radius: 7px;
+    font-size: 13px;
+    font-weight: 500;
+    transition: opacity 0.2s;
+}
+.sell-button:hover {
+    opacity: 0.9;
+}
+
+.logout-button {
+    background-color: transparent;
+    color: #D1D5DB;
+    border: 1px solid #4B5563;
+    padding: 6px 14px;
+    border-radius: 7px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.logout-button:hover {
+    color: #FFFFFF;
+    border-color: #FFFFFF;
+}

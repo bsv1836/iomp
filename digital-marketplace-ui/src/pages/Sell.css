@@ -1,0 +1,288 @@
+/* Sell.css */
+
+.sell-page {
+    background-color: #F9FAFB;
+    min-height: 100vh;
+}
+
+.sell-container {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 40px 24px;
+}
+
+.sell-header {
+    margin-bottom: 28px;
+}
+
+.sell-title {
+    color: #111827;
+    font-size: 26px;
+    font-weight: 600;
+    margin: 0 0 6px 0;
+}
+
+.sell-subtitle {
+    color: #6B7280;
+    font-size: 14px;
+    margin: 0;
+}
+
+.sell-steps {
+    display: flex;
+    align-items: center;
+    margin-bottom: 28px;
+    gap: 12px;
+}
+
+.sell-step-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.sell-step-circle {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.sell-step-circle.active {
+    background-color: #000000;
+    color: #FFFFFF;
+    border: 1px solid #000000;
+}
+
+.sell-step-circle.inactive {
+    background-color: #FFFFFF;
+    color: #9CA3AF;
+    border: 1px solid #D1D5DB;
+}
+
+.sell-step-label {
+    font-size: 13px;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.sell-step-label.active {
+    color: #111827;
+}
+
+.sell-step-label.inactive {
+    color: #9CA3AF;
+}
+
+.sell-step-line {
+    flex: 1;
+    height: 1px;
+    background-color: #E5E7EB;
+}
+
+.sell-card {
+    background-color: #FFFFFF;
+    border-radius: 16px;
+    padding: 32px;
+    border: 1px solid #E5E7EB;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.sell-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.sell-field {
+    margin-bottom: 18px;
+}
+
+.sell-label {
+    display: block;
+    color: #374151;
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 7px;
+}
+
+.sell-input {
+    width: 100%;
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: 1px solid #D1D5DB;
+    background-color: #FFFFFF;
+    color: #111827;
+    font-size: 14px;
+    box-sizing: border-box;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.sell-input:focus {
+    border-color: #111827;
+    box-shadow: 0 0 0 1px #111827;
+}
+
+.sell-textarea {
+    height: 90px;
+    resize: vertical;
+}
+
+.sell-image-upload-box {
+    border: 1px dashed #D1D5DB;
+    border-radius: 10px;
+    overflow: hidden;
+    background-color: #F9FAFB;
+    transition: background-color 0.2s;
+}
+
+.sell-image-upload-box:hover {
+    background-color: #F3F4F6;
+}
+
+.sell-upload-label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 28px;
+    cursor: pointer;
+    gap: 6px;
+}
+
+.sell-upload-icon {
+    font-size: 28px;
+}
+
+.sell-upload-text {
+    color: #111827;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.sell-upload-hint {
+    color: #6B7280;
+    font-size: 12px;
+}
+
+.sell-preview-box {
+    position: relative;
+    height: 180px;
+}
+
+.sell-preview-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.sell-remove-img {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background-color: #000000;
+    color: #FFFFFF;
+    border: none;
+    padding: 4px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 500;
+    transition: opacity 0.2s;
+}
+
+.sell-remove-img:hover {
+    opacity: 0.9;
+}
+
+.sell-error {
+    background-color: #FEF2F2;
+    color: #991B1B;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    font-size: 13px;
+    border: 1px solid #FCA5A5;
+}
+
+.sell-success-box {
+    background-color: #F0FDF4;
+    color: #166534;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    font-size: 13px;
+    border: 1px solid #86EFAC;
+}
+
+.sell-next-button {
+    width: 100%;
+    padding: 12px;
+    background-color: #000000;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.sell-next-button:hover {
+    opacity: 0.9;
+}
+
+.sell-action-row {
+    display: flex;
+    gap: 12px;
+}
+
+.sell-back-button {
+    flex: 1;
+    padding: 11px;
+    background-color: #FFFFFF;
+    color: #4B5563;
+    border: 1px solid #D1D5DB;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.sell-back-button:hover {
+    background-color: #F9FAFB;
+}
+
+.sell-submit-button {
+    flex: 2;
+    padding: 11px;
+    background-color: #000000;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.sell-submit-button:hover {
+    opacity: 0.9;
+}
+
+.sell-submit-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+@media (max-width: 600px) {
+    .sell-row {
+        grid-template-columns: 1fr;
+    }
+}

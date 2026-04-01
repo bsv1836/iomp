@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import API from '../api/axios'
 import Navbar from '../components/Navbar'
+import './Sell.css'
 
 const CATEGORIES = [
     'Electronics', 'Mobile Phones', 'Computers & Laptops',
@@ -75,146 +76,136 @@ function Sell() {
     }
 
     return (
-        <div style={styles.page}>
+        <div className="sell-page">
             <Navbar />
-            <div style={styles.container}>
+            <div className="sell-container">
 
                 {/* Header */}
-                <div style={styles.header}>
-                    <h1 style={styles.title}>List a Product</h1>
-                    <p style={styles.subtitle}>Fill in the details to list your product on the marketplace</p>
+                <div className="sell-header">
+                    <h1 className="sell-title">List a Product</h1>
+                    <p className="sell-subtitle">Fill in the details to list your product on the marketplace</p>
                 </div>
 
                 {/* Step Indicator */}
-                <div style={styles.steps}>
-                    <div style={styles.stepItem}>
-                        <div style={{
-                            ...styles.stepCircle,
-                            backgroundColor: step >= 1 ? '#38240D' : '#fff',
-                            color: step >= 1 ? '#FDFBD4' : '#9a7a5a',
-                            border: `0.5px solid ${step >= 1 ? '#38240D' : '#d4c8b0'}`,
-                        }}>1</div>
-                        <span style={{ ...styles.stepLabel, color: step === 1 ? '#38240D' : '#9a7a5a' }}>
+                <div className="sell-steps">
+                    <div className="sell-step-item">
+                        <div className={`sell-step-circle ${step >= 1 ? 'active' : 'inactive'}`}>1</div>
+                        <span className={`sell-step-label ${step === 1 ? 'active' : 'inactive'}`}>
                             Basic Details
                         </span>
                     </div>
-                    <div style={styles.stepLine} />
-                    <div style={styles.stepItem}>
-                        <div style={{
-                            ...styles.stepCircle,
-                            backgroundColor: step >= 2 ? '#38240D' : '#fff',
-                            color: step >= 2 ? '#FDFBD4' : '#9a7a5a',
-                            border: `0.5px solid ${step >= 2 ? '#38240D' : '#d4c8b0'}`,
-                        }}>2</div>
-                        <span style={{ ...styles.stepLabel, color: step === 2 ? '#38240D' : '#9a7a5a' }}>
+                    <div className="sell-step-line" />
+                    <div className="sell-step-item">
+                        <div className={`sell-step-circle ${step >= 2 ? 'active' : 'inactive'}`}>2</div>
+                        <span className={`sell-step-label ${step === 2 ? 'active' : 'inactive'}`}>
                             Product History
                         </span>
                     </div>
                 </div>
 
                 <form onSubmit={handleSubmit}>
-                    <div style={styles.card}>
+                    <div className="sell-card">
 
                         {/* Step 1 */}
                         {step === 1 && (
                             <>
-                                <div style={styles.row}>
-                                    <div style={styles.field}>
-                                        <label style={styles.label}>Sale Type</label>
-                                        <select name="saleType" value={form.saleType} onChange={handleChange} style={styles.input}>
+                                <div className="sell-row">
+                                    <div className="sell-field">
+                                        <label className="sell-label">Sale Type</label>
+                                        <select name="saleType" value={form.saleType} onChange={handleChange} className="sell-input">
                                             <option value="AUCTION">Auction</option>
                                             <option value="DIRECT">Direct Sale</option>
                                         </select>
                                     </div>
-                                    <div style={styles.field}>
-                                        <label style={styles.label}>Category *</label>
-                                        <select name="category" value={form.category} onChange={handleChange} style={styles.input} required>
+                                    <div className="sell-field">
+                                        <label className="sell-label">Category *</label>
+                                        <select name="category" value={form.category} onChange={handleChange} className="sell-input" required>
                                             <option value="">Select category</option>
                                             {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
                                         </select>
                                     </div>
                                 </div>
 
-                                <div style={styles.row}>
-                                    <div style={styles.field}>
-                                        <label style={styles.label}>Product Name *</label>
+                                <div className="sell-row">
+                                    <div className="sell-field">
+                                        <label className="sell-label">Product Name *</label>
                                         <input name="name" type="text" placeholder="e.g. iPhone 14 Pro"
-                                               value={form.name} onChange={handleChange} style={styles.input} required />
+                                               value={form.name} onChange={handleChange} className="sell-input" required />
                                     </div>
-                                    <div style={styles.field}>
-                                        <label style={styles.label}>Brand</label>
+                                    <div className="sell-field">
+                                        <label className="sell-label">Brand</label>
                                         <input name="brand" type="text" placeholder="e.g. Apple, Samsung"
-                                               value={form.brand} onChange={handleChange} style={styles.input} />
+                                               value={form.brand} onChange={handleChange} className="sell-input" />
                                     </div>
                                 </div>
 
-                                <div style={styles.field}>
-                                    <label style={styles.label}>Description</label>
+                                <div className="sell-field">
+                                    <label className="sell-label">Description</label>
                                     <textarea name="description" placeholder="Describe your product in detail..."
                                               value={form.description} onChange={handleChange}
-                                              style={{ ...styles.input, height: '90px', resize: 'vertical' }} />
+                                              className="sell-input sell-textarea" />
                                 </div>
 
-                                <div style={styles.row}>
-                                    <div style={styles.field}>
-                                        <label style={styles.label}>
+                                <div className="sell-row">
+                                    <div className="sell-field">
+                                        <label className="sell-label">
                                             {form.saleType === 'AUCTION' ? 'Starting Price (₹) *' : 'Price (₹) *'}
                                         </label>
                                         <input name="startingPrice" type="number" placeholder="e.g. 50000"
                                                value={form.startingPrice} onChange={handleChange}
-                                               style={styles.input} required min="1" />
+                                               className="sell-input" required min="1" />
                                     </div>
                                     {form.saleType === 'AUCTION' && (
-                                        <div style={styles.field}>
-                                            <label style={styles.label}>Bid Increment (₹) *</label>
+                                        <div className="sell-field">
+                                            <label className="sell-label">Bid Increment (₹) *</label>
                                             <input name="bidIncrement" type="number" placeholder="e.g. 1000"
                                                    value={form.bidIncrement} onChange={handleChange}
-                                                   style={styles.input} required min="1" />
+                                                   className="sell-input" required min="1" />
                                         </div>
                                     )}
                                 </div>
 
                                 {form.saleType === 'AUCTION' && (
-                                    <div style={styles.field}>
-                                        <label style={styles.label}>Auction End Time *</label>
+                                    <div className="sell-field">
+                                        <label className="sell-label">Auction End Time *</label>
                                         <input name="auctionEndTime" type="datetime-local"
                                                value={form.auctionEndTime} onChange={handleChange}
-                                               style={styles.input} required />
+                                               className="sell-input" required />
                                     </div>
                                 )}
 
-                                <div style={styles.field}>
-                                    <label style={styles.label}>Location / City</label>
+                                <div className="sell-field">
+                                    <label className="sell-label">Location / City</label>
                                     <input name="location" type="text" placeholder="e.g. Hyderabad"
-                                           value={form.location} onChange={handleChange} style={styles.input} />
+                                           value={form.location} onChange={handleChange} className="sell-input" />
                                 </div>
 
                                 {/* Image Upload */}
-                                <div style={styles.field}>
-                                    <label style={styles.label}>Product Image</label>
-                                    <div style={styles.imageUploadBox}>
+                                <div className="sell-field">
+                                    <label className="sell-label">Product Image</label>
+                                    <div className="sell-image-upload-box">
                                         {imagePreview ? (
-                                            <div style={styles.previewBox}>
-                                                <img src={imagePreview} alt="preview" style={styles.previewImg} />
+                                            <div className="sell-preview-box">
+                                                <img src={imagePreview} alt="preview" className="sell-preview-img" />
                                                 <button type="button"
                                                         onClick={() => { setImageFile(null); setImagePreview(null) }}
-                                                        style={styles.removeImg}>
+                                                        className="sell-remove-img">
                                                     Remove
                                                 </button>
                                             </div>
                                         ) : (
-                                            <label style={styles.uploadLabel}>
+                                            <label className="sell-upload-label">
                                                 <input type="file" accept="image/*"
                                                        onChange={handleImageChange} style={{ display: 'none' }} />
-                                                <span style={styles.uploadIcon}>📷</span>
-                                                <span style={styles.uploadText}>Click to upload image</span>
-                                                <span style={styles.uploadHint}>JPG, PNG up to 5MB</span>
+                                                <span className="sell-upload-icon">📷</span>
+                                                <span className="sell-upload-text">Click to upload image</span>
+                                                <span className="sell-upload-hint">JPG, PNG up to 5MB</span>
                                             </label>
                                         )}
                                     </div>
                                 </div>
 
-                                <button type="button" style={styles.nextButton} onClick={() => setStep(2)}>
+                                <button type="button" className="sell-next-button" onClick={() => setStep(2)}>
                                     Next: Product History →
                                 </button>
                             </>
@@ -223,53 +214,53 @@ function Sell() {
                         {/* Step 2 */}
                         {step === 2 && (
                             <>
-                                <div style={styles.row}>
-                                    <div style={styles.field}>
-                                        <label style={styles.label}>Purchase Month</label>
-                                        <select name="purchaseMonth" value={form.purchaseMonth} onChange={handleChange} style={styles.input}>
+                                <div className="sell-row">
+                                    <div className="sell-field">
+                                        <label className="sell-label">Purchase Month</label>
+                                        <select name="purchaseMonth" value={form.purchaseMonth} onChange={handleChange} className="sell-input">
                                             <option value="">Select month</option>
                                             {MONTHS.map((m, i) => <option key={m} value={i + 1}>{m}</option>)}
                                         </select>
                                     </div>
-                                    <div style={styles.field}>
-                                        <label style={styles.label}>Purchase Year</label>
+                                    <div className="sell-field">
+                                        <label className="sell-label">Purchase Year</label>
                                         <input name="purchaseYear" type="number" placeholder="e.g. 2022"
                                                value={form.purchaseYear} onChange={handleChange}
-                                               style={styles.input} min="2000" max={new Date().getFullYear()} />
+                                               className="sell-input" min="2000" max={new Date().getFullYear()} />
                                     </div>
                                 </div>
 
-                                <div style={styles.row}>
-                                    <div style={styles.field}>
-                                        <label style={styles.label}>Product Condition *</label>
-                                        <select name="productCondition" value={form.productCondition} onChange={handleChange} style={styles.input} required>
+                                <div className="sell-row">
+                                    <div className="sell-field">
+                                        <label className="sell-label">Product Condition *</label>
+                                        <select name="productCondition" value={form.productCondition} onChange={handleChange} className="sell-input" required>
                                             <option value="">Select condition</option>
                                             {CONDITIONS.map(c => <option key={c} value={c}>{c}</option>)}
                                         </select>
                                     </div>
-                                    <div style={styles.field}>
-                                        <label style={styles.label}>Warranty Remaining</label>
+                                    <div className="sell-field">
+                                        <label className="sell-label">Warranty Remaining</label>
                                         <input name="warrantyRemaining" type="text" placeholder="e.g. 6 months, None"
-                                               value={form.warrantyRemaining} onChange={handleChange} style={styles.input} />
+                                               value={form.warrantyRemaining} onChange={handleChange} className="sell-input" />
                                     </div>
                                 </div>
 
-                                <div style={styles.field}>
-                                    <label style={styles.label}>Damages or Defects</label>
+                                <div className="sell-field">
+                                    <label className="sell-label">Damages or Defects</label>
                                     <textarea name="damages"
                                               placeholder="Describe any scratches, dents, or issues. Write 'None' if no damages."
                                               value={form.damages} onChange={handleChange}
-                                              style={{ ...styles.input, height: '90px', resize: 'vertical' }} />
+                                              className="sell-input sell-textarea" />
                                 </div>
 
-                                {error && <div style={styles.error}>{error}</div>}
-                                {success && <div style={styles.successBox}>{success}</div>}
+                                {error && <div className="sell-error">{error}</div>}
+                                {success && <div className="sell-success-box">{success}</div>}
 
-                                <div style={styles.row}>
-                                    <button type="button" style={styles.backButton} onClick={() => setStep(1)}>
+                                <div className="sell-action-row">
+                                    <button type="button" className="sell-back-button" onClick={() => setStep(1)}>
                                         ← Back
                                     </button>
-                                    <button type="submit" style={styles.submitButton} disabled={loading}>
+                                    <button type="submit" className="sell-submit-button" disabled={loading}>
                                         {loading ? 'Listing...' : 'List Product'}
                                     </button>
                                 </div>
@@ -280,86 +271,6 @@ function Sell() {
             </div>
         </div>
     )
-}
-
-const styles = {
-    page: { backgroundColor: '#f7f4ec', minHeight: '100vh' },
-    container: { maxWidth: '680px', margin: '0 auto', padding: '40px 24px' },
-    header: { marginBottom: '28px' },
-    title: { color: '#38240D', fontSize: '26px', fontWeight: '500', margin: '0 0 6px 0' },
-    subtitle: { color: '#9a7a5a', fontSize: '14px', margin: 0 },
-    steps: { display: 'flex', alignItems: 'center', marginBottom: '28px', gap: '12px' },
-    stepItem: { display: 'flex', alignItems: 'center', gap: '8px' },
-    stepCircle: {
-        width: '28px', height: '28px', borderRadius: '50%',
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-        fontSize: '13px', fontWeight: '500',
-    },
-    stepLabel: { fontSize: '13px' },
-    stepLine: { flex: 1, height: '0.5px', backgroundColor: '#d4c8b0' },
-    card: {
-        backgroundColor: '#fff', borderRadius: '16px',
-        padding: '32px', border: '0.5px solid #e8e0d0',
-    },
-    row: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' },
-    field: { marginBottom: '18px' },
-    label: {
-        display: 'block', color: '#713600',
-        fontSize: '13px', marginBottom: '7px',
-    },
-    input: {
-        width: '100%', padding: '10px 14px', borderRadius: '8px',
-        border: '0.5px solid #d4c8b0', backgroundColor: '#faf9f5',
-        color: '#38240D', fontSize: '14px', boxSizing: 'border-box', outline: 'none',
-    },
-    imageUploadBox: {
-        border: '0.5px dashed #d4c8b0', borderRadius: '10px', overflow: 'hidden',
-        backgroundColor: '#faf9f5',
-    },
-    uploadLabel: {
-        display: 'flex', flexDirection: 'column',
-        alignItems: 'center', padding: '28px', cursor: 'pointer', gap: '6px',
-    },
-    uploadIcon: { fontSize: '28px' },
-    uploadText: { color: '#38240D', fontSize: '14px' },
-    uploadHint: { color: '#9a7a5a', fontSize: '12px' },
-    previewBox: { position: 'relative', height: '180px' },
-    previewImg: { width: '100%', height: '100%', objectFit: 'cover' },
-    removeImg: {
-        position: 'absolute', top: '8px', right: '8px',
-        backgroundColor: '#38240D', color: '#FDFBD4',
-        border: 'none', padding: '4px 10px',
-        borderRadius: '6px', cursor: 'pointer', fontSize: '12px',
-    },
-    error: {
-        backgroundColor: '#ff000010', color: '#a33000',
-        padding: '12px', borderRadius: '8px',
-        marginBottom: '16px', fontSize: '13px',
-        border: '0.5px solid #ff000025',
-    },
-    successBox: {
-        backgroundColor: '#71360010', color: '#713600',
-        padding: '12px', borderRadius: '8px',
-        marginBottom: '16px', fontSize: '13px',
-        border: '0.5px solid #71360025',
-    },
-    nextButton: {
-        width: '100%', padding: '11px',
-        backgroundColor: '#C05800', color: '#FDFBD4',
-        border: 'none', borderRadius: '8px',
-        fontSize: '14px', cursor: 'pointer',
-    },
-    backButton: {
-        flex: 1, padding: '11px', backgroundColor: '#fff',
-        color: '#9a7a5a', border: '0.5px solid #d4c8b0',
-        borderRadius: '8px', fontSize: '14px', cursor: 'pointer',
-    },
-    submitButton: {
-        flex: 2, padding: '11px',
-        backgroundColor: '#38240D', color: '#FDFBD4',
-        border: 'none', borderRadius: '8px',
-        fontSize: '14px', cursor: 'pointer',
-    },
 }
 
 export default Sell

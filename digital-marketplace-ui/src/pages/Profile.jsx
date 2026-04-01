@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import API from '../api/axios'
 import Navbar from '../components/Navbar'
+import './Profile.css'
 
 function Profile() {
     const navigate = useNavigate()
@@ -66,92 +67,99 @@ function Profile() {
         }
     }
 
+    const getStatusClass = (status) => {
+        if (status === 'ACTIVE') return 'profile-status-active'
+        if (status === 'PENDING') return 'profile-status-pending'
+        if (status === 'SOLD') return 'profile-status-sold'
+        return 'profile-status-other'
+    }
+
     if (loading) return (
-        <div style={styles.page}><Navbar />
-            <p style={styles.loading}>Loading profile...</p>
+        <div className="profile-page"><Navbar />
+            <p className="profile-loading">Loading profile...</p>
         </div>
     )
 
     return (
-        <div style={styles.page}>
+        <div className="profile-page">
             <Navbar />
-            <div style={styles.container}>
+            <div className="profile-container">
 
                 {/* Profile Card */}
-                <div style={styles.profileCard}>
-                    <div style={styles.avatar}>
+                <div className="profile-card">
+                    <div className="profile-avatar">
                         {profile?.name?.charAt(0).toUpperCase()}
                     </div>
 
-                    <div style={styles.profileInfo}>
+                    <div className="profile-info">
                         {editing ? (
-                            <div style={styles.editForm}>
-                                <div style={styles.editRow}>
-                                    <div style={styles.editField}>
-                                        <label style={styles.editLabel}>Name</label>
+                            <div className="profile-edit-form">
+                                <div className="profile-edit-row">
+                                    <div className="profile-edit-field">
+                                        <label className="profile-edit-label">Name</label>
                                         <input
                                             value={form.name}
                                             onChange={e => setForm({ ...form, name: e.target.value })}
-                                            style={styles.editInput}
+                                            className="profile-edit-input"
                                         />
                                     </div>
-                                    <div style={styles.editField}>
-                                        <label style={styles.editLabel}>Mobile</label>
+                                    <div className="profile-edit-field">
+                                        <label className="profile-edit-label">Mobile</label>
                                         <input
                                             value={form.mobile}
                                             onChange={e => setForm({ ...form, mobile: e.target.value })}
-                                            style={styles.editInput}
+                                            className="profile-edit-input"
                                             placeholder="9876543210"
                                         />
                                     </div>
-                                    <div style={styles.editField}>
-                                        <label style={styles.editLabel}>Location</label>
+                                    <div className="profile-edit-field">
+                                        <label className="profile-edit-label">Location</label>
                                         <input
                                             value={form.location}
                                             onChange={e => setForm({ ...form, location: e.target.value })}
-                                            style={styles.editInput}
+                                            className="profile-edit-input"
                                             placeholder="Hyderabad"
                                         />
                                     </div>
                                 </div>
-                                <div style={styles.editActions}>
-                                    <button onClick={handleSave} style={styles.saveBtn}>Save Changes</button>
-                                    <button onClick={() => setEditing(false)} style={styles.cancelBtn}>Cancel</button>
+                                <div className="profile-edit-actions">
+                                    <button onClick={handleSave} className="profile-save-btn">Save Changes</button>
+                                    <button onClick={() => setEditing(false)} className="profile-cancel-btn">Cancel</button>
                                 </div>
                             </div>
                         ) : (
                             <>
-                                <h2 style={styles.profileName}>{profile?.name}</h2>
-                                <p style={styles.profileEmail}>✉️ {profile?.email}</p>
-                                {profile?.mobile && <p style={styles.profileMeta}>📱 {profile.mobile}</p>}
-                                {profile?.location && <p style={styles.profileMeta}>📍 {profile.location}</p>}
-                                <button onClick={() => setEditing(true)} style={styles.editBtn}>
+                                <h2 className="profile-name">{profile?.name}</h2>
+                                <p className="profile-email">✉️ {profile?.email}</p>
+                                {profile?.mobile && <p className="profile-meta">📱 {profile.mobile}</p>}
+                                {profile?.location && <p className="profile-meta">📍 {profile.location}</p>}
+                                <button onClick={() => setEditing(true)} className="profile-edit-btn">
                                     Edit Profile
                                 </button>
                             </>
                         )}
-                        {saveMsg && <p style={styles.saveMsg}>{saveMsg}</p>}
+                        {saveMsg && <p className="profile-save-msg">{saveMsg}</p>}
                     </div>
 
                     {/* Stats */}
-                    <div style={styles.stats}>
-                        <div style={styles.stat}>
-                            <span style={styles.statNum}>{listedProducts.length}</span>
-                            <span style={styles.statLabel}>Listed</span>
+                    <div className="profile-stats">
+                        <div className="profile-stat">
+                            <span className="profile-stat-num">{listedProducts.length}</span>
+                            <span className="profile-stat-label">Listed</span>
                         </div>
-                        <div style={styles.stat}>
-                            <span style={styles.statNum}>{wonProducts.length}</span>
-                            <span style={styles.statLabel}>Won / Bought</span>
+                        <div className="profile-stat">
+                            <span className="profile-stat-num">{wonProducts.length}</span>
+                            <span className="profile-stat-label">Won / Bought</span>
                         </div>
-                        <div style={styles.stat}>
-                            <span style={styles.statNum}>{myBids.length}</span>
-                            <span style={styles.statLabel}>Bids Placed</span>
+                        <div className="profile-stat">
+                            <span className="profile-stat-num">{myBids.length}</span>
+                            <span className="profile-stat-label">Bids Placed</span>
                         </div>
                     </div>
                 </div>
 
                 {/* Tabs */}
-                <div style={styles.tabs}>
+                <div className="profile-tabs">
                     {[
                         { key: 'listed', label: 'My Listings' },
                         { key: 'won', label: 'Won / Bought' },
@@ -159,7 +167,7 @@ function Profile() {
                     ].map(tab => (
                         <button
                             key={tab.key}
-                            style={{ ...styles.tab, ...(activeTab === tab.key ? styles.activeTab : {}) }}
+                            className={`profile-tab ${activeTab === tab.key ? 'active' : ''}`}
                             onClick={() => setActiveTab(tab.key)}
                         >
                             {tab.label}
@@ -172,29 +180,25 @@ function Profile() {
                     {/* My Listings */}
                     {activeTab === 'listed' && (
                         listedProducts.length === 0 ? <EmptyState text="You haven't listed any products yet." /> : (
-                            <div style={styles.list}>
+                            <div className="profile-list">
                                 {listedProducts.map(p => (
-                                    <div key={p.productId} style={styles.itemCard}>
-                                        {p.imagePath && <img src={p.imagePath} alt={p.name} style={styles.itemImg} />}
-                                        <div style={styles.itemInfo}>
-                                            <h3 style={styles.itemName}>{p.name}</h3>
-                                            <p style={styles.itemMeta}>
+                                    <div key={p.productId} className="profile-item-card">
+                                        {p.imagePath && <img src={p.imagePath} alt={p.name} className="profile-item-img" />}
+                                        <div className="profile-item-info">
+                                            <h3 className="profile-item-name">{p.name}</h3>
+                                            <p className="profile-item-meta">
                                                 ₹{p.currentPrice?.toLocaleString()} &nbsp;·&nbsp;
-                                                <span style={{
-                                                    color: p.status === 'ACTIVE' ? '#3a7a3a' :
-                                                        p.status === 'PENDING' ? '#C05800' :
-                                                            p.status === 'SOLD' ? '#713600' : '#9a7a5a'
-                                                }}>
+                                                <span className={getStatusClass(p.status)}>
                                                     {p.status}
                                                 </span>
                                             </p>
                                             {p.status === 'PENDING' && (
-                                                <button style={styles.confirmBtn} onClick={() => handleConfirmSale(p.productId)}>
+                                                <button className="profile-confirm-btn" onClick={() => handleConfirmSale(p.productId)}>
                                                     Confirm Sale
                                                 </button>
                                             )}
                                         </div>
-                                        <button style={styles.viewBtn} onClick={() => navigate(`/products/${p.productId}`)}>
+                                        <button className="profile-view-btn" onClick={() => navigate(`/products/${p.productId}`)}>
                                             View →
                                         </button>
                                     </div>
@@ -206,18 +210,18 @@ function Profile() {
                     {/* Won / Bought */}
                     {activeTab === 'won' && (
                         wonProducts.length === 0 ? <EmptyState text="You haven't won or bought any products yet." /> : (
-                            <div style={styles.list}>
+                            <div className="profile-list">
                                 {wonProducts.map(p => (
-                                    <div key={p.productId} style={styles.itemCard}>
-                                        {p.imagePath && <img src={p.imagePath} alt={p.name} style={styles.itemImg} />}
-                                        <div style={styles.itemInfo}>
-                                            <h3 style={styles.itemName}>{p.name}</h3>
-                                            <p style={styles.itemMeta}>
+                                    <div key={p.productId} className="profile-item-card">
+                                        {p.imagePath && <img src={p.imagePath} alt={p.name} className="profile-item-img" />}
+                                        <div className="profile-item-info">
+                                            <h3 className="profile-item-name">{p.name}</h3>
+                                            <p className="profile-item-meta">
                                                 ₹{p.currentPrice?.toLocaleString()} &nbsp;·&nbsp;
-                                                <span style={{ color: '#C05800' }}>{p.saleType}</span>
+                                                <span style={{ color: '#111827', fontWeight: 500 }}>{p.saleType}</span>
                                             </p>
                                         </div>
-                                        <button style={styles.viewBtn} onClick={() => navigate(`/products/${p.productId}`)}>
+                                        <button className="profile-view-btn" onClick={() => navigate(`/products/${p.productId}`)}>
                                             View →
                                         </button>
                                     </div>
@@ -229,16 +233,16 @@ function Profile() {
                     {/* Bid History */}
                     {activeTab === 'bids' && (
                         myBids.length === 0 ? <EmptyState text="You haven't placed any bids yet." /> : (
-                            <div style={styles.list}>
+                            <div className="profile-list">
                                 {myBids.map(bid => (
-                                    <div key={bid.bidId} style={styles.bidCard}>
+                                    <div key={bid.bidId} className="profile-bid-card">
                                         <div>
-                                            <p style={styles.itemName}>{bid.productName}</p>
-                                            <p style={styles.bidTime}>{new Date(bid.timestamp).toLocaleString()}</p>
+                                            <p className="profile-item-name">{bid.productName}</p>
+                                            <p className="profile-bid-time">{new Date(bid.timestamp).toLocaleString()}</p>
                                         </div>
-                                        <div style={styles.bidRight}>
-                                            <span style={styles.bidAmount}>₹{bid.bidAmount?.toLocaleString()}</span>
-                                            <button style={styles.viewBtn} onClick={() => navigate(`/products/${bid.productId}`)}>
+                                        <div className="profile-bid-right">
+                                            <span className="profile-bid-amount">₹{bid.bidAmount?.toLocaleString()}</span>
+                                            <button className="profile-view-btn" onClick={() => navigate(`/products/${bid.productId}`)}>
                                                 View →
                                             </button>
                                         </div>
@@ -255,107 +259,10 @@ function Profile() {
 
 function EmptyState({ text }) {
     return (
-        <div style={{
-            textAlign: 'center', padding: '48px 20px',
-            backgroundColor: '#fff', borderRadius: '12px',
-            border: '0.5px dashed #d4c8b0',
-        }}>
-            <p style={{ color: '#9a7a5a', margin: 0, fontSize: '14px' }}>{text}</p>
+        <div className="profile-empty-state">
+            <p className="profile-empty-text">{text}</p>
         </div>
     )
-}
-
-const styles = {
-    page: { backgroundColor: '#f7f4ec', minHeight: '100vh' },
-    container: { padding: '36px 48px' },
-    loading: { color: '#9a7a5a', padding: '40px', textAlign: 'center' },
-    profileCard: {
-        backgroundColor: '#fff', borderRadius: '16px',
-        padding: '28px', border: '0.5px solid #e8e0d0',
-        display: 'flex', alignItems: 'center',
-        gap: '24px', marginBottom: '28px', flexWrap: 'wrap',
-    },
-    avatar: {
-        width: '68px', height: '68px', borderRadius: '50%',
-        backgroundColor: '#38240D', color: '#FDFBD4',
-        fontSize: '26px', fontWeight: '500',
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-        flexShrink: 0,
-    },
-    profileInfo: { flex: 1, minWidth: '200px' },
-    profileName: { color: '#38240D', fontSize: '20px', fontWeight: '500', margin: '0 0 6px 0' },
-    profileEmail: { color: '#9a7a5a', fontSize: '13px', margin: '0 0 4px 0' },
-    profileMeta: { color: '#713600', fontSize: '13px', margin: '0 0 4px 0' },
-    editBtn: {
-        marginTop: '10px', backgroundColor: 'transparent',
-        color: '#C05800', border: '0.5px solid #C0580044',
-        padding: '6px 14px', borderRadius: '6px',
-        fontSize: '13px', cursor: 'pointer',
-    },
-    editForm: { display: 'flex', flexDirection: 'column', gap: '12px' },
-    editRow: { display: 'flex', gap: '12px', flexWrap: 'wrap' },
-    editField: { display: 'flex', flexDirection: 'column', gap: '4px', flex: 1, minWidth: '140px' },
-    editLabel: { color: '#713600', fontSize: '12px' },
-    editInput: {
-        padding: '8px 12px', borderRadius: '6px',
-        border: '0.5px solid #d4c8b0', backgroundColor: '#faf9f5',
-        color: '#38240D', fontSize: '14px', outline: 'none',
-    },
-    editActions: { display: 'flex', gap: '10px' },
-    saveBtn: {
-        padding: '8px 18px', backgroundColor: '#C05800',
-        color: '#FDFBD4', border: 'none', borderRadius: '6px',
-        fontSize: '13px', cursor: 'pointer',
-    },
-    cancelBtn: {
-        padding: '8px 18px', backgroundColor: 'transparent',
-        color: '#9a7a5a', border: '0.5px solid #d4c8b0',
-        borderRadius: '6px', fontSize: '13px', cursor: 'pointer',
-    },
-    saveMsg: { color: '#3a7a3a', fontSize: '13px', margin: '8px 0 0 0' },
-    stats: { display: 'flex', gap: '32px', marginLeft: 'auto' },
-    stat: { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' },
-    statNum: { color: '#C05800', fontSize: '24px', fontWeight: '500' },
-    statLabel: { color: '#9a7a5a', fontSize: '12px' },
-    tabs: { display: 'flex', gap: '4px', marginBottom: '20px' },
-    tab: {
-        padding: '9px 20px', backgroundColor: '#fff',
-        color: '#9a7a5a', border: '0.5px solid #e8e0d0',
-        borderRadius: '8px', fontSize: '13px', cursor: 'pointer',
-    },
-    activeTab: {
-        backgroundColor: '#38240D', color: '#FDFBD4',
-        border: '0.5px solid #38240D',
-    },
-    list: { display: 'flex', flexDirection: 'column', gap: '10px' },
-    itemCard: {
-        backgroundColor: '#fff', borderRadius: '12px',
-        padding: '14px 18px', border: '0.5px solid #e8e0d0',
-        display: 'flex', alignItems: 'center', gap: '14px',
-    },
-    itemImg: { width: '52px', height: '52px', borderRadius: '8px', objectFit: 'cover', flexShrink: 0 },
-    itemInfo: { flex: 1 },
-    itemName: { color: '#38240D', fontSize: '14px', fontWeight: '500', margin: '0 0 4px 0' },
-    itemMeta: { color: '#9a7a5a', fontSize: '13px', margin: '0 0 6px 0' },
-    confirmBtn: {
-        padding: '5px 12px', backgroundColor: '#C05800',
-        color: '#FDFBD4', border: 'none', borderRadius: '6px',
-        fontSize: '12px', cursor: 'pointer',
-    },
-    viewBtn: {
-        padding: '6px 14px', backgroundColor: 'transparent',
-        color: '#C05800', border: '0.5px solid #C0580044',
-        borderRadius: '6px', fontSize: '13px', cursor: 'pointer',
-        flexShrink: 0,
-    },
-    bidCard: {
-        backgroundColor: '#fff', borderRadius: '12px',
-        padding: '14px 18px', border: '0.5px solid #e8e0d0',
-        display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-    },
-    bidTime: { color: '#9a7a5a', fontSize: '12px', margin: 0 },
-    bidRight: { display: 'flex', alignItems: 'center', gap: '16px' },
-    bidAmount: { color: '#C05800', fontSize: '18px', fontWeight: '500' },
 }
 
 export default Profile
