@@ -4,9 +4,11 @@ import com.marketplace.digital_marketplace.dto.ContactResponse;
 import com.marketplace.digital_marketplace.dto.BuyResponse;
 import com.marketplace.digital_marketplace.dto.ProductRequest;
 import com.marketplace.digital_marketplace.dto.ProductResponse;
+import com.marketplace.digital_marketplace.entity.Notification;
 import com.marketplace.digital_marketplace.entity.Product;
 import com.marketplace.digital_marketplace.entity.Product.ProductStatus;
 import com.marketplace.digital_marketplace.entity.User;
+import com.marketplace.digital_marketplace.repository.NotificationRepository;
 import com.marketplace.digital_marketplace.repository.ProductRepository;
 import com.marketplace.digital_marketplace.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +25,7 @@ public class ProductService {
 
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
+    private final NotificationRepository notificationRepository;
 
     public ProductResponse listProduct(ProductRequest request, UserDetails userDetails) {
         User seller = userRepository.findByEmail(userDetails.getUsername())
@@ -107,6 +110,15 @@ public class ProductService {
         product.setWinnerId(buyer.getId());
         productRepository.save(product);
 
+        // 7. Notify the seller
+        Notification notification = Notification.builder()
+                .user(product.getSeller())
+                .message(buyer.getName() + " wants to buy " + product.getName() + ". Please confirm the sale in your profile.")
+                .productId(product.getProductId())
+                .read(false)
+                .build();
+        notificationRepository.save(notification);
+
         return new BuyResponse(
                 product.getProductId(),
                 product.getName(),
@@ -151,6 +163,18 @@ public class ProductService {
         // Mark as SOLD
         product.setStatus(Product.ProductStatus.SOLD);
         productRepository.save(product);
+
+        // Notify the buyer
+        User buyer = userRepository.findById(product.getWinnerId()).orElse(null);
+        if (buyer != null) {
+            Notification notification = Notification.builder()
+                    .user(buyer)
+                    .message("Congratulations! The seller confirmed your purchase of " + product.getName() + ". View the contacts in the product details.")
+                    .productId(product.getProductId())
+                    .read(false)
+                    .build();
+            notificationRepository.save(notification);
+        }
 
         return "Sale confirmed successfully";
     }

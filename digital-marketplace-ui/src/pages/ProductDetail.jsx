@@ -140,10 +140,10 @@ function ProductDetail() {
                             </div>
                             {product.description && <p className="product-description">{product.description}</p>}
                             <div className="product-chips">
-                                {product.category && <span className="product-chip">📦 {product.category}</span>}
-                                {product.location && <span className="product-chip">📍 {product.location}</span>}
-                                {product.productCondition && <span className="product-chip">✨ {product.productCondition}</span>}
-                                {product.warrantyRemaining && <span className="product-chip">🛡️ {product.warrantyRemaining}</span>}
+                                {product.category && <span className="product-chip">Category: {product.category}</span>}
+                                {product.location && <span className="product-chip">Location: {product.location}</span>}
+                                {product.productCondition && <span className="product-chip">Condition: {product.productCondition}</span>}
+                                {product.warrantyRemaining && <span className="product-chip">Warranty: {product.warrantyRemaining}</span>}
                             </div>
                         </div>
 

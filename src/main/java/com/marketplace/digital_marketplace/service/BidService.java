@@ -4,9 +4,11 @@ import com.marketplace.digital_marketplace.dto.BidMessage;
 import com.marketplace.digital_marketplace.dto.BidRequest;
 import com.marketplace.digital_marketplace.dto.BidResponse;
 import com.marketplace.digital_marketplace.entity.Bid;
+import com.marketplace.digital_marketplace.entity.Notification;
 import com.marketplace.digital_marketplace.entity.Product;
 import com.marketplace.digital_marketplace.entity.User;
 import com.marketplace.digital_marketplace.repository.BidRepository;
+import com.marketplace.digital_marketplace.repository.NotificationRepository;
 import com.marketplace.digital_marketplace.repository.ProductRepository;
 import com.marketplace.digital_marketplace.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +26,7 @@ public class BidService {
     private final BidRepository bidRepository;
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
+    private final NotificationRepository notificationRepository;
     private final SimpMessagingTemplate messagingTemplate;
 
     // ─── Place a Bid ────────────────────────────────────────────────
@@ -70,6 +73,9 @@ public class BidService {
             );
         }
 
+        // Fetch current highest bid before placing new bid
+        Bid previousHighestBid = bidRepository.findTopByProductOrderByBidAmountDesc(product).orElse(null);
+
         // 8. Save the bid
         Bid bid = Bid.builder()
                 .product(product)
@@ -77,6 +83,17 @@ public class BidService {
                 .bidAmount(request.getBidAmount())
                 .build();
         bidRepository.save(bid);
+
+        // Notify previous highest bidder if outbid
+        if (previousHighestBid != null && !previousHighestBid.getBidder().getId().equals(bidder.getId())) {
+            Notification outbidNotification = Notification.builder()
+                    .user(previousHighestBid.getBidder())
+                    .message("Alert: You've been outbid on " + product.getName() + "! The new highest bid is ₹" + request.getBidAmount() + ".")
+                    .productId(product.getProductId())
+                    .read(false)
+                    .build();
+            notificationRepository.save(outbidNotification);
+        }
 
         // 9. Update current price on the product
         product.setCurrentPrice(request.getBidAmount());

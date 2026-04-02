@@ -163,9 +163,9 @@ function ProductCard({ product, onClick, unavailable = false }) {
                 </div>
 
                 <div className="product-card-meta">
-                    {product.category && <span className="product-meta-chip">{product.category}</span>}
-                    {product.location && <span className="product-meta-chip">📍 {product.location}</span>}
-                    {product.productCondition && <span className="product-meta-chip">{product.productCondition}</span>}
+                    {product.category && <span className="product-meta-chip">Category: {product.category}</span>}
+                    {product.location && <span className="product-meta-chip">Location: {product.location}</span>}
+                    {product.productCondition && <span className="product-meta-chip">Condition: {product.productCondition}</span>}
                 </div>
 
                 <div className="product-card-footer">
