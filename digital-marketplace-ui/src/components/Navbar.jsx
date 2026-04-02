@@ -7,7 +7,7 @@ function Navbar() {
     const navigate = useNavigate()
     const location = useLocation()
     const token = localStorage.getItem('token')
-    const userName = localStorage.getItem('userName')
+    const [userName, setUserName] = useState(localStorage.getItem('userName') || '')
     const [unreadCount, setUnreadCount] = useState(0)
     const [notifications, setNotifications] = useState([])
     const [showBell, setShowBell] = useState(false)
@@ -16,6 +16,14 @@ function Navbar() {
     useEffect(() => {
         if (token) fetchNotifications()
     }, [token, location.pathname])
+
+    useEffect(() => {
+        const syncUserName = () => setUserName(localStorage.getItem('userName') || '')
+        window.addEventListener('storage', syncUserName)
+        // Also sync on route changes (same-tab updates)
+        syncUserName()
+        return () => window.removeEventListener('storage', syncUserName)
+    }, [location.pathname])
 
     useEffect(() => {
         const handleClickOutside = (e) => {

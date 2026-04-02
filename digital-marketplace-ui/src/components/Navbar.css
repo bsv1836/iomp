@@ -4,51 +4,82 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 32px;
-    height: 60px;
-    background-color: #000000; /* Minimalist Black */
+    padding: 0 40px;
+    height: 70px;
+    background: rgba(10, 10, 11, 0.7);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border-light);
     position: sticky;
     top: 0;
-    z-index: 100;
+    z-index: 1000;
 }
 
 .navbar-left {
     display: flex;
     align-items: center;
-    gap: 32px;
+    gap: 40px;
 }
 
 .navbar-brand {
     text-decoration: none;
-    color: #FFFFFF;
-    font-weight: 500;
-    font-size: 20px;
-    letter-spacing: 0.3px;
+    font-weight: 700;
+    font-size: 24px;
+    letter-spacing: -0.5px;
+    background: var(--gradient-neon);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    transition: var(--transition-smooth);
+}
+
+.navbar-brand:hover {
+    filter: brightness(1.2);
 }
 
 .navbar-link {
-    color: #D1D5DB; /* Gray-300 */
+    color: var(--text-secondary);
     text-decoration: none;
-    font-size: 14px;
-    transition: color 0.2s;
+    font-size: 15px;
+    font-weight: 500;
+    transition: var(--transition-smooth);
+    position: relative;
+    padding: 8px 0;
+}
+
+.navbar-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--gradient-neon);
+    transition: var(--transition-smooth);
+    border-radius: 2px;
 }
 
 .navbar-link:hover {
-    color: #FFFFFF;
+    color: var(--text-primary);
+}
+
+.navbar-link:hover::after, .navbar-link.active::after {
+    width: 100%;
 }
 
 .navbar-link.active {
-    color: #FFFFFF;
+    color: var(--text-primary);
 }
 
 .navbar-right {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 20px;
 }
 
 .bell-wrapper {
     position: relative;
+    display: flex;
+    align-items: center;
 }
 
 .bell-button {
@@ -56,80 +87,94 @@
     border: none;
     cursor: pointer;
     position: relative;
-    padding: 6px;
+    padding: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
+    border-radius: 50%;
+    transition: var(--transition-smooth);
+    color: var(--text-secondary);
+}
+
+.bell-button:hover {
+    background: var(--bg-glass);
+    color: var(--accent-pink);
 }
 
 .bell-badge {
     position: absolute;
-    top: 0px;
-    right: 0px;
-    background-color: #FFFFFF;
-    color: #000000;
+    top: 2px;
+    right: 2px;
+    background: var(--accent-pink);
+    color: #fff;
     border-radius: 50%;
-    width: 16px;
-    height: 16px;
+    width: 18px;
+    height: 18px;
     font-size: 10px;
-    font-weight: 600;
+    font-weight: 700;
     display: flex;
     align-items: center;
     justify-content: center;
+    box-shadow: 0 0 10px var(--accent-pink);
 }
 
 .notif-dropdown {
     position: absolute;
-    top: 44px;
-    right: 0;
-    width: 300px;
-    background-color: #FFFFFF;
-    border: 1px solid #E5E7EB;
-    border-radius: 12px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    top: 50px;
+    right: -10px;
+    width: 320px;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-elevation);
     z-index: 200;
     overflow: hidden;
+    backdrop-filter: blur(10px);
+    animation: fadeIn 0.2s ease-out;
 }
 
 .dropdown-title {
-    color: #111827;
-    font-weight: 500;
-    font-size: 13px;
-    padding: 12px 16px;
-    border-bottom: 1px solid #E5E7EB;
+    color: var(--text-primary);
+    font-weight: 600;
+    font-size: 14px;
+    padding: 16px;
+    border-bottom: 1px solid var(--border-light);
     margin: 0;
+    background: rgba(255, 255, 255, 0.02);
 }
 
 .empty-note {
-    color: #6B7280;
+    color: var(--text-muted);
     font-size: 13px;
-    padding: 16px;
+    padding: 24px;
     margin: 0;
     text-align: center;
 }
 
 .notif-item {
-    padding: 12px 16px;
-    border-bottom: 1px solid #E5E7EB;
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border-light);
     cursor: pointer;
-    transition: background-color 0.2s;
+    transition: var(--transition-smooth);
 }
+
 .notif-item:hover {
-    background-color: #F9FAFB;
+    background: var(--bg-glass);
 }
 .notif-item.unread {
-    background-color: #F3F4F6;
+    background: rgba(99, 102, 241, 0.1);
+    border-left: 2px solid var(--accent-indigo);
 }
 
 .notif-text {
-    color: #111827;
+    color: var(--text-primary);
     font-size: 13px;
-    margin: 0 0 4px 0;
+    margin: 0 0 6px 0;
     line-height: 1.5;
 }
 
 .notif-time {
-    color: #6B7280;
+    color: var(--text-muted);
     font-size: 11px;
     margin: 0;
 }
@@ -137,53 +182,72 @@
 .profile-link {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
     text-decoration: none;
+    padding: 6px 12px;
+    border-radius: 100px;
+    transition: var(--transition-smooth);
+    background: var(--bg-glass);
+    border: 1px solid transparent;
+}
+
+.profile-link:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: var(--border-light);
 }
 
 .avatar {
-    width: 30px;
-    height: 30px;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
-    background-color: #FFFFFF;
-    color: #000000;
-    font-size: 13px;
-    font-weight: 500;
+    background: var(--gradient-neon);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
     display: flex;
     align-items: center;
     justify-content: center;
+    box-shadow: var(--shadow-glow);
 }
 
 .user-name {
-    color: #FFFFFF;
-    font-size: 13px;
+    color: var(--text-primary);
+    font-size: 14px;
+    font-weight: 500;
 }
 
 .sell-button {
-    background-color: #FFFFFF;
-    color: #000000;
+    background: var(--gradient-neon);
+    color: #fff;
     text-decoration: none;
-    padding: 7px 16px;
-    border-radius: 7px;
-    font-size: 13px;
-    font-weight: 500;
-    transition: opacity 0.2s;
+    padding: 8px 20px;
+    border-radius: 100px;
+    font-size: 14px;
+    font-weight: 600;
+    transition: var(--transition-bouncy);
+    box-shadow: 0 0 15px rgba(217, 70, 239, 0.3);
 }
+
 .sell-button:hover {
-    opacity: 0.9;
+    transform: scale(1.05);
+    box-shadow: 0 0 25px rgba(217, 70, 239, 0.5);
+    color: #fff;
 }
 
 .logout-button {
     background-color: transparent;
-    color: #D1D5DB;
-    border: 1px solid #4B5563;
-    padding: 6px 14px;
-    border-radius: 7px;
+    color: var(--text-secondary);
+    border: 1px solid var(--border-light);
+    padding: 8px 16px;
+    border-radius: 100px;
     font-size: 13px;
+    font-weight: 500;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: var(--transition-smooth);
 }
+
 .logout-button:hover {
-    color: #FFFFFF;
-    border-color: #FFFFFF;
+    color: #ef4444;
+    border-color: #ef4444;
+    background: rgba(239, 68, 68, 0.1);
 }

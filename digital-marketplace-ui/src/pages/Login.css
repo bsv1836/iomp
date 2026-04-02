@@ -1,197 +1,182 @@
-/* Login.css */
+/* Login.css & Register.css Shared Auth Styles */
 
-/* --- Auth Page Animations --- */
-@keyframes fadeInSlideUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
-}
-
-/* --- Layout --- */
-.login-page {
+.login-page, .register-page {
     min-height: 100vh;
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #F9FAFB; /* Gray-50 */
     padding: 24px;
-    box-sizing: border-box;
+    position: relative;
+    z-index: 10;
 }
 
-.login-container {
+.login-container, .register-container {
     width: 100%;
     max-width: 440px;
     display: flex;
     flex-direction: column;
     align-items: center;
+    position: relative;
 }
 
-/* --- Header / Brand --- */
-.login-header {
+/* Background floating glow behind the form */
+.login-container::before, .register-container::before {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 120%; height: 120%;
+    background: radial-gradient(circle, rgba(99,102,241,0.2) 0%, transparent 60%);
+    z-index: -1;
+    border-radius: 50%;
+    filter: blur(40px);
+}
+
+.login-header, .register-header {
     text-align: center;
     margin-bottom: 32px;
-    animation: fadeIn 0.8s ease-out forwards;
 }
 
-.login-brand {
-    color: #000000;
-    font-size: 28px;
+.login-brand, .register-brand {
+    font-size: 32px;
     font-weight: 700;
     margin: 0 0 8px 0;
     letter-spacing: -1px;
+    background: var(--gradient-neon);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
-.login-tagline-sub {
-    color: #6B7280;
+.login-tagline-sub, .register-tagline-sub {
+    color: var(--text-secondary);
     font-size: 15px;
     margin: 0;
 }
 
-/* --- Form Card --- */
-.login-card {
+/* Base card styling uses global glass-card class, so here we add auth specifics */
+.login-card, .register-card {
     width: 100%;
-    background-color: #FFFFFF;
     padding: 40px;
-    border-radius: 16px;
-    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 0 1px rgba(0,0,0,0.1);
-    animation: fadeInSlideUp 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
     box-sizing: border-box;
+    /* Extend glass-card behavior */
+    background: var(--bg-glass);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-elevation);
+    animation: fadeIn 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
 }
 
-.login-title {
-    color: #111827;
-    font-size: 20px;
+.login-title, .register-title {
+    color: var(--text-primary);
+    font-size: 22px;
     font-weight: 600;
     margin: 0 0 24px 0;
     text-align: center;
 }
 
-.login-error {
-    background-color: #FEF2F2;
-    color: #991B1B;
+.login-error, .register-error {
+    background: rgba(239, 68, 68, 0.1);
+    color: #fca5a5;
     padding: 14px;
     border-radius: 8px;
     margin-bottom: 24px;
     font-size: 13px;
-    border: 1px solid #FCA5A5;
-    animation: fadeInSlideUp 0.3s ease-out;
+    border: 1px solid rgba(239, 68, 68, 0.3);
 }
 
-/* --- Fields --- */
-.login-field {
+.login-field, .register-field {
     margin-bottom: 20px;
 }
 
-.login-label {
+.login-label, .register-label {
     display: block;
-    color: #374151;
+    color: var(--text-secondary);
     font-size: 13px;
     font-weight: 500;
     margin-bottom: 8px;
 }
 
-.login-input {
+.login-input, .register-input {
     width: 100%;
-    padding: 12px 16px;
+    padding: 14px 16px;
     border-radius: 8px;
-    border: 1px solid #E5E7EB;
-    background-color: #FFFFFF;
-    color: #111827;
+    border: 1px solid var(--border-light);
+    background: rgba(0, 0, 0, 0.2);
+    color: var(--text-primary);
     font-size: 15px;
     box-sizing: border-box;
     outline: none;
-    transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+    transition: var(--transition-smooth);
 }
 
-.login-input::placeholder {
-    color: #9CA3AF;
+.login-input::placeholder, .register-input::placeholder {
+    color: var(--text-muted);
 }
 
-.login-input:hover {
-    border-color: #D1D5DB;
+.login-input:focus, .register-input:focus {
+    border-color: var(--accent-indigo);
+    box-shadow: 0 0 0 1px var(--accent-indigo), 0 0 15px rgba(99,102,241,0.2);
+    background: rgba(0,0,0,0.4);
 }
 
-.login-input:focus {
-    border-color: #000000;
-    box-shadow: 0 0 0 1px #000000;
-}
-
-/* --- Button --- */
-.login-button {
+.login-button, .register-button {
     width: 100%;
     padding: 14px;
-    background-color: #000000;
-    color: #FFFFFF;
+    background: var(--gradient-neon);
+    color: #fff;
     border: none;
     border-radius: 8px;
     font-size: 15px;
-    font-weight: 500;
+    font-weight: 600;
     cursor: pointer;
-    margin-top: 8px;
-    transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+    margin-top: 12px;
+    transition: var(--transition-bouncy);
+    box-shadow: var(--shadow-glow);
 }
 
-.login-button:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 8px 15px -5px rgba(0, 0, 0, 0.2);
-    background-color: #111827;
+.login-button:hover, .register-button:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-glow-strong);
 }
 
-.login-button:active {
+.login-button:active, .register-button:active {
     transform: translateY(1px);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.login-button:disabled {
+.login-button:disabled, .register-button:disabled {
     opacity: 0.5;
     cursor: not-allowed;
     transform: none;
-    box-shadow: none;
 }
 
-/* --- Footer --- */
-.login-footer {
-    color: #6B7280;
+.login-footer, .register-footer {
+    color: var(--text-secondary);
     text-align: center;
     margin-top: 32px;
     font-size: 14px;
 }
 
-.login-link {
-    color: #000000;
+.login-link, .register-link {
+    color: var(--accent-pink);
     text-decoration: none;
     font-weight: 600;
-    transition: color 0.2s;
+    transition: var(--transition-smooth);
 }
 
-.login-link:hover {
-    color: #4B5563;
-    text-decoration: underline;
+.login-link:hover, .register-link:hover {
+    color: var(--accent-indigo);
+    text-shadow: 0 0 8px rgba(99,102,241,0.5);
 }
 
-/* Responsive adjustments */
 @media (max-width: 480px) {
-    .login-card {
+    .login-card, .register-card {
         padding: 32px 24px;
-        box-shadow: none; /* Flatter mobile look */
-        background-color: transparent;
-    }
-    .login-page {
-        background-color: #FFFFFF;
+        background: transparent;
+        border: none;
+        box-shadow: none;
+        backdrop-filter: none;
     }
 }
