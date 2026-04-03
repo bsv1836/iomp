@@ -158,8 +158,18 @@ function ProductCard({ product, onClick, unavailable = false }) {
             {/* Body */}
             <div className="product-card-body">
                 <div className="product-card-top-row">
-                    <h3 className="product-card-title">{product.name}</h3>
-                    {product.brand && <p className="product-card-brand">{product.brand}</p>}
+                    <div className="product-card-title-group">
+                        <h3 className="product-card-title">{product.name}</h3>
+                        {product.brand && <p className="product-card-brand">{product.brand}</p>}
+                    </div>
+                    {/* Seller Avatar */}
+                    <div className="product-seller-avatar" title={`Seller: ${product.sellerName}`}>
+                        {product.sellerProfilePhoto ? (
+                            <img src={product.sellerProfilePhoto} alt={product.sellerName} className="seller-avatar-img" />
+                        ) : (
+                            product.sellerName?.charAt(0).toUpperCase()
+                        )}
+                    </div>
                 </div>
 
                 <div className="product-card-meta">

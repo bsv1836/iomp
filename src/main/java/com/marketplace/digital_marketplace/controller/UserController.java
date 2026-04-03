@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
@@ -64,5 +65,13 @@ public class UserController {
             @AuthenticationPrincipal UserDetails userDetails) {
         userService.markAllNotificationsRead(userDetails);
         return ResponseEntity.ok("All notifications marked as read");
+    }
+
+    // ─── Update Profile Photo (500x500) ──────────────────────────────
+    @PutMapping("/profile/photo")
+    public ResponseEntity<?> updateProfilePhoto(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @RequestParam("file") MultipartFile file) {
+        return ResponseEntity.ok(userService.updateProfilePhoto(userDetails, file));
     }
 }

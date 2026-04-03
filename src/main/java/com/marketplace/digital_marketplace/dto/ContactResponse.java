@@ -9,8 +9,10 @@ public class ContactResponse {
     private String sellerName;
     private String sellerEmail;
     private String sellerMobile;
+    private String sellerProfilePhoto;
 
     private String winnerName;
     private String winnerEmail;
     private String winnerMobile;
+    private String winnerProfilePhoto;
 }

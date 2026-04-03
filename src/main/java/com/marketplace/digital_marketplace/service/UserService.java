@@ -13,7 +13,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +31,7 @@ public class UserService {
     private final JwtUtil jwtUtil;
     private final NotificationRepository notificationRepository;
     private final ProductRepository productRepository;
+    private final Cloudinary cloudinary;
 
     // ─── Register ────────────────────────────────────────────────────
     public String registerUser(RegisterRequestDTO request) {
@@ -55,6 +60,7 @@ public class UserService {
         response.put("token", token);
         response.put("name", user.getName());
         response.put("id", user.getId());
+        response.put("profilePhoto", user.getProfilePhoto());
         return response;
     }
 
@@ -125,5 +131,31 @@ public class UserService {
                 .findByUserAndReadFalseOrderByCreatedAtDesc(user);
         unread.forEach(n -> n.setRead(true));
         notificationRepository.saveAll(unread);
+    }
+
+    // ─── Update Profile Photo (500x500) ──────────────────────────────
+    public String updateProfilePhoto(UserDetails userDetails, MultipartFile file) {
+        User user = userRepository.findByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        try {
+            // Upload to Cloudinary with 500x500 square crop
+            Map<?, ?> uploadResult = cloudinary.uploader().upload(
+                    file.getBytes(),
+                    ObjectUtils.asMap(
+                            "folder", "profiles",
+                            "transformation", "w_500,h_500,c_fill,g_face"
+                    )
+            );
+
+            String imageUrl = (String) uploadResult.get("secure_url");
+            user.setProfilePhoto(imageUrl);
+            userRepository.save(user);
+
+            return imageUrl;
+
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to upload profile photo: " + e.getMessage());
+        }
     }
 }

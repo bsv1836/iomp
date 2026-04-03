@@ -94,6 +94,10 @@ public class ProductService {
         User buyer = userRepository.findByEmail(userDetails.getUsername())
                 .orElseThrow(() -> new RuntimeException("Buyer not found"));
 
+        if (buyer.getMobile() == null || buyer.getMobile().trim().isEmpty()) {
+            throw new RuntimeException("Mobile number required for purchase. Please update your profile.");
+        }
+
         // 4. Buyer must NOT be the seller (check BEFORE status check)
         if (product.getSeller().getId().equals(buyer.getId())) {
             throw new RuntimeException("You cannot buy your own product.");
@@ -214,8 +218,8 @@ public class ProductService {
         }
 
         return new ContactResponse(
-                seller.getName(), seller.getEmail(), seller.getMobile(),
-                winner.getName(), winner.getEmail(), winner.getMobile()
+                seller.getName(), seller.getEmail(), seller.getMobile(), seller.getProfilePhoto(),
+                winner.getName(), winner.getEmail(), winner.getMobile(), winner.getProfilePhoto()
         );
     }
 }

@@ -57,6 +57,10 @@ public class BidService {
         User bidder = userRepository.findByEmail(bidderEmail)
                 .orElseThrow(() -> new RuntimeException("Bidder not found"));
 
+        if (bidder.getMobile() == null || bidder.getMobile().trim().isEmpty()) {
+            throw new RuntimeException("Mobile number required for bidding. Please update your profile.");
+        }
+
         // 6. Bidder must NOT be the seller
         if (product.getSeller().getId().equals(bidder.getId())) {
             throw new RuntimeException("Seller cannot bid on their own product");
@@ -161,6 +165,7 @@ public class BidService {
                 bid.getProduct().getName(),
                 bid.getBidder().getId(),
                 bid.getBidder().getName(),
+                bid.getBidder().getProfilePhoto(),
                 bid.getBidAmount(),
                 bid.getTimestamp()
         );

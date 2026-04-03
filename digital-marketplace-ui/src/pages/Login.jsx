@@ -21,6 +21,8 @@ function Login() {
             const res = await API.post('/api/users/login', form)
             localStorage.setItem('token', res.data.token)
             localStorage.setItem('userName', res.data.name)
+            localStorage.setItem('userId', res.data.id)
+            localStorage.setItem('profilePhoto', res.data.profilePhoto || '')
             navigate('/products')
         } catch (err) {
             setError('Invalid email or password. Please try again.')
@@ -69,6 +71,15 @@ function Login() {
                             {loading ? 'Signing in...' : 'Sign in'}
                         </button>
                     </form>
+
+                    <div className="oauth-divider">
+                        <span>or</span>
+                    </div>
+
+                    <a href="http://localhost:8080/oauth2/authorization/google" className="oauth-google-btn">
+                        <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" className="oauth-google-icon" />
+                        Sign in with Google
+                    </a>
 
                     <p className="login-footer">
                         Don't have an account?{' '}

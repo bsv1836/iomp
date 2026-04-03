@@ -65,9 +65,9 @@ function Register() {
                             <label className="register-label">Mobile Number</label>
                             <input
                                 name="mobile" type="tel"
-                                placeholder="9876543210"
+                                placeholder="9876543210 (Optional)"
                                 value={form.mobile} onChange={handleChange}
-                                className="register-input" required
+                                className="register-input"
                             />
                         </div>
                         <div className="register-field">
@@ -88,6 +88,15 @@ function Register() {
                             {loading ? 'Creating account...' : 'Create Account'}
                         </button>
                     </form>
+
+                    <div className="oauth-divider">
+                        <span>or</span>
+                    </div>
+
+                    <a href="http://localhost:8080/oauth2/authorization/google" className="oauth-google-btn">
+                        <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" className="oauth-google-icon" />
+                        Sign up with Google
+                    </a>
 
                     <p className="register-footer">
                         Already have an account?{' '}

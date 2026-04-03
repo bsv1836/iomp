@@ -34,12 +34,14 @@ public class ProductResponse {
     private Integer purchaseYear;
     private String warrantyRemaining;
     private String imagePath;
+    private String sellerProfilePhoto;
 
     public static ProductResponse from(Product p) {
         return ProductResponse.builder()
                 .productId(p.getProductId())
                 .sellerId(p.getSeller().getId())
                 .sellerName(p.getSeller().getName())
+                .sellerProfilePhoto(p.getSeller().getProfilePhoto())
                 .name(p.getName())
                 .description(p.getDescription())
                 .startingPrice(p.getStartingPrice())

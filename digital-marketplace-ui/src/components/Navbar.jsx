@@ -8,6 +8,7 @@ function Navbar() {
     const location = useLocation()
     const token = localStorage.getItem('token')
     const [userName, setUserName] = useState(localStorage.getItem('userName') || '')
+    const [profilePhoto, setProfilePhoto] = useState(localStorage.getItem('profilePhoto') || '')
     const [unreadCount, setUnreadCount] = useState(0)
     const [notifications, setNotifications] = useState([])
     const [showBell, setShowBell] = useState(false)
@@ -18,11 +19,14 @@ function Navbar() {
     }, [token, location.pathname])
 
     useEffect(() => {
-        const syncUserName = () => setUserName(localStorage.getItem('userName') || '')
-        window.addEventListener('storage', syncUserName)
+        const syncUserInfo = () => {
+            setUserName(localStorage.getItem('userName') || '')
+            setProfilePhoto(localStorage.getItem('profilePhoto') || '')
+        }
+        window.addEventListener('storage', syncUserInfo)
         // Also sync on route changes (same-tab updates)
-        syncUserName()
-        return () => window.removeEventListener('storage', syncUserName)
+        syncUserInfo()
+        return () => window.removeEventListener('storage', syncUserInfo)
     }, [location.pathname])
 
     useEffect(() => {
@@ -120,7 +124,11 @@ function Navbar() {
                         {/* Profile */}
                         <Link to="/profile" className="profile-link">
                             <div className="avatar">
-                                {userName?.charAt(0).toUpperCase()}
+                                {profilePhoto ? (
+                                    <img src={profilePhoto} alt={userName} className="avatar-img" />
+                                ) : (
+                                    userName?.charAt(0).toUpperCase()
+                                )}
                             </div>
                             <span className="user-name">{userName}</span>
                         </Link>

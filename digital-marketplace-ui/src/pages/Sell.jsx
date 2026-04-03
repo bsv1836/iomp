@@ -37,7 +37,15 @@ function Sell() {
 
     const handleImageChange = (e) => {
         const file = e.target.files[0]
-        if (file) { setImageFile(file); setImagePreview(URL.createObjectURL(file)) }
+        if (file) {
+            if (file.size > 10 * 1024 * 1024) {
+                setError('Image size should be less than 10MB')
+                return
+            }
+            setImageFile(file)
+            setImagePreview(URL.createObjectURL(file))
+            setError('')
+        }
     }
 
     const handleSubmit = async (e) => {
@@ -199,7 +207,7 @@ function Sell() {
                                                        onChange={handleImageChange} style={{ display: 'none' }} />
                                                 <span className="sell-upload-icon">📷</span>
                                                 <span className="sell-upload-text">Click to upload image</span>
-                                                <span className="sell-upload-hint">JPG, PNG up to 5MB</span>
+                                                <span className="sell-upload-hint">JPG, PNG up to 10MB</span>
                                             </label>
                                         )}
                                     </div>

@@ -20,6 +20,8 @@ function ProductDetail() {
     const [liveMessages, setLiveMessages] = useState([])
     const [winner, setWinner] = useState(null)
     const [contacts, setContacts] = useState(null)
+    const [showConfirmModal, setShowConfirmModal] = useState(false)
+    const userId = parseInt(localStorage.getItem('userId'))
     const stompClient = useRef(null)
 
     useEffect(() => {
@@ -41,8 +43,17 @@ function ProductDetail() {
                 client.subscribe(`/topic/bids/${id}`, (msg) => {
                     const data = JSON.parse(msg.body)
                     if (data.type === 'NEW_BID') {
-                        setHighestBid({ bidAmount: data.bidAmount, bidderName: data.bidderName, timestamp: data.timestamp })
-                        setLiveMessages(prev => [{ text: `${data.bidderName} bid ₹${data.bidAmount.toLocaleString()}`, time: new Date().toLocaleTimeString() }, ...prev].slice(0, 5))
+                        setHighestBid({ 
+                            bidAmount: data.bidAmount, 
+                            bidderName: data.bidderName, 
+                            bidderProfilePhoto: data.bidderProfilePhoto,
+                            timestamp: data.timestamp 
+                        })
+                        setLiveMessages(prev => [{ 
+                            text: `${data.bidderName} bid ₹${data.bidAmount.toLocaleString()}`, 
+                            time: new Date().toLocaleTimeString(),
+                            photo: data.bidderProfilePhoto
+                        }, ...prev].slice(0, 5))
                         setProduct(prev => prev ? { ...prev, currentPrice: data.bidAmount } : prev)
                     }
                     if (data.type === 'AUCTION_CLOSED') {
@@ -84,8 +95,20 @@ function ProductDetail() {
             const res = await API.post(`/api/products/${id}/buy`)
             setMessage(res.data.message)
             setProduct(prev => prev ? { ...prev, status: 'PENDING' } : prev)
+            setShowConfirmModal(false)
         } catch (err) {
             setError(err.response?.data || 'Failed to complete purchase.')
+        } finally { setLoading(false) }
+    }
+
+    const handleConfirmSale = async () => {
+        setLoading(true); setError('')
+        try {
+            await API.post(`/api/products/${id}/confirm-sale`)
+            setMessage('Sale confirmed successfully!')
+            setProduct(prev => prev ? { ...prev, status: 'SOLD' } : prev)
+        } catch (err) {
+            setError(err.response?.data || 'Failed to confirm sale.')
         } finally { setLoading(false) }
     }
 
@@ -97,6 +120,7 @@ function ProductDetail() {
 
     const isAuction = product.saleType === 'AUCTION'
     const minimumBid = product.currentPrice + product.bidIncrement
+    const isSeller = product.sellerId === userId
 
     return (
         <div className="product-detail-page">
@@ -157,9 +181,18 @@ function ProductDetail() {
                                         <span className="product-history-value">{MONTH_NAMES[product.purchaseMonth - 1]} {product.purchaseYear}</span>
                                     </div>
                                 )}
-                                <div className="product-history-item">
+                                <div className="product-history-item seller-row">
                                     <span className="product-history-label">Seller</span>
-                                    <span className="product-history-value">{product.sellerName}</span>
+                                    <div className="product-history-seller">
+                                        <div className="seller-mini-avatar">
+                                            {product.sellerProfilePhoto ? (
+                                                <img src={product.sellerProfilePhoto} alt={product.sellerName} className="seller-avatar-img" />
+                                            ) : (
+                                                product.sellerName?.charAt(0).toUpperCase()
+                                            )}
+                                        </div>
+                                        <span className="product-history-value">{product.sellerName}</span>
+                                    </div>
                                 </div>
                                 <div className="product-history-item">
                                     <span className="product-history-label">Listed On</span>
@@ -213,13 +246,24 @@ function ProductDetail() {
                         {highestBid && (
                             <div className="product-highest-bid-card">
                                 <p className="product-highest-label">Highest Bid</p>
-                                <p className="product-highest-amount">₹{highestBid.bidAmount?.toLocaleString()}</p>
-                                <p className="product-highest-bidder">by {highestBid.bidderName}</p>
+                                <div className="highest-bid-user">
+                                    <div className="highest-bid-avatar">
+                                        {highestBid.bidderProfilePhoto ? (
+                                            <img src={highestBid.bidderProfilePhoto} alt={highestBid.bidderName} className="seller-avatar-img" />
+                                        ) : (
+                                            highestBid.bidderName?.charAt(0).toUpperCase()
+                                        )}
+                                    </div>
+                                    <div className="highest-bid-info">
+                                        <p className="product-highest-amount">₹{highestBid.bidAmount?.toLocaleString()}</p>
+                                        <p className="product-highest-bidder">by {highestBid.bidderName}</p>
+                                    </div>
+                                </div>
                             </div>
                         )}
 
                         {/* Action Box */}
-                        {product.status === 'ACTIVE' && (
+                        {product.status === 'ACTIVE' && !isSeller && (
                             <div className="product-detail-card">
                                 {isAuction ? (
                                     <>
@@ -237,7 +281,11 @@ function ProductDetail() {
                                         </button>
                                     </>
                                 ) : (
-                                    <button onClick={handleBuy} className="product-action-btn" disabled={loading}>
+                                    <button 
+                                        onClick={() => setShowConfirmModal(true)} 
+                                        className="product-action-btn" 
+                                        disabled={loading}
+                                    >
                                         {loading ? 'Processing...' : `Buy Now — ₹${product.currentPrice?.toLocaleString()}`}
                                     </button>
                                 )}
@@ -246,10 +294,23 @@ function ProductDetail() {
                             </div>
                         )}
 
-                        {/* Pending notice */}
+                        {/* Pending notice / Seller confirm */}
                         {product.status === 'PENDING' && !contacts && (
                             <div className="product-pending-box">
-                                <p className="product-pending-text">⏳ Awaiting seller confirmation</p>
+                                {isSeller ? (
+                                    <>
+                                        <p className="product-pending-text" style={{ marginBottom: '16px' }}>⏳ Sale awaiting your confirmation</p>
+                                        <button 
+                                            onClick={handleConfirmSale} 
+                                            className="product-action-btn confirm-sale-btn" 
+                                            disabled={loading}
+                                        >
+                                            {loading ? 'Confirming...' : 'Confirm Sale'}
+                                        </button>
+                                    </>
+                                ) : (
+                                    <p className="product-pending-text">⏳ Awaiting seller confirmation</p>
+                                )}
                             </div>
                         )}
 
@@ -259,16 +320,38 @@ function ProductDetail() {
                                 <p className="product-card-title">Contact Details</p>
                                 <div className="product-contact-section">
                                     <p className="product-contact-role">Seller</p>
-                                    <p className="product-contact-item">👤 {contacts.sellerName}</p>
-                                    <p className="product-contact-item">✉️ {contacts.sellerEmail}</p>
-                                    <p className="product-contact-item">📱 {contacts.sellerMobile || 'Not provided'}</p>
+                                    <div className="contact-user-info">
+                                        <div className="contact-avatar">
+                                            {contacts.sellerProfilePhoto ? (
+                                                <img src={contacts.sellerProfilePhoto} alt={contacts.sellerName} className="seller-avatar-img" />
+                                            ) : (
+                                                contacts.sellerName?.charAt(0).toUpperCase()
+                                            )}
+                                        </div>
+                                        <div>
+                                            <p className="product-contact-item">👤 {contacts.sellerName}</p>
+                                            <p className="product-contact-item">✉️ {contacts.sellerEmail}</p>
+                                            <p className="product-contact-item">📱 {contacts.sellerMobile || 'Not provided'}</p>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div className="product-divider" />
                                 <div className="product-contact-section">
                                     <p className="product-contact-role">Buyer</p>
-                                    <p className="product-contact-item">👤 {contacts.winnerName}</p>
-                                    <p className="product-contact-item">✉️ {contacts.winnerEmail}</p>
-                                    <p className="product-contact-item">📱 {contacts.winnerMobile || 'Not provided'}</p>
+                                    <div className="contact-user-info">
+                                        <div className="contact-avatar">
+                                            {contacts.winnerProfilePhoto ? (
+                                                <img src={contacts.winnerProfilePhoto} alt={contacts.winnerName} className="seller-avatar-img" />
+                                            ) : (
+                                                contacts.winnerName?.charAt(0).toUpperCase()
+                                            )}
+                                        </div>
+                                        <div>
+                                            <p className="product-contact-item">👤 {contacts.winnerName}</p>
+                                            <p className="product-contact-item">✉️ {contacts.winnerEmail}</p>
+                                            <p className="product-contact-item">📱 {contacts.winnerMobile || 'Not provided'}</p>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         )}
@@ -281,8 +364,17 @@ function ProductDetail() {
                                 </p>
                                 {liveMessages.map((msg, i) => (
                                     <div key={i} className="product-live-item">
-                                        <span className="product-live-text">{msg.text}</span>
-                                        <span className="product-live-time">{msg.time}</span>
+                                        <div className="live-avatar">
+                                            {msg.photo ? (
+                                                <img src={msg.photo} alt="user" className="seller-avatar-img" />
+                                            ) : (
+                                                '👤'
+                                            )}
+                                        </div>
+                                        <div className="live-content">
+                                            <span className="product-live-text">{msg.text}</span>
+                                            <span className="product-live-time">{msg.time}</span>
+                                        </div>
                                     </div>
                                 ))}
                             </div>
@@ -290,6 +382,31 @@ function ProductDetail() {
                     </div>
                 </div>
             </div>
+
+            {/* Buy Confirmation Modal */}
+            {showConfirmModal && (
+                <div className="modal-overlay">
+                    <div className="confirm-modal">
+                        <div className="modal-header">
+                            <h2 className="modal-title">Confirm Purchase</h2>
+                            <button className="modal-close" onClick={() => setShowConfirmModal(false)}>×</button>
+                        </div>
+                        <div className="modal-body">
+                            <p>Are you sure you want to purchase <strong>{product.name}</strong>?</p>
+                            <div className="modal-price-summary">
+                                <span className="label">Total Price:</span>
+                                <span className="amount">₹{product.currentPrice?.toLocaleString()}</span>
+                            </div>
+                        </div>
+                        <div className="modal-footer">
+                            <button className="modal-btn-cancel" onClick={() => setShowConfirmModal(false)} disabled={loading}>Cancel</button>
+                            <button className="modal-btn-confirm" onClick={handleBuy} disabled={loading}>
+                                {loading ? 'Processing...' : 'Confirm Purchase'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     )
 }

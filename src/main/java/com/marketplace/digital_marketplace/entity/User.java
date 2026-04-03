@@ -25,7 +25,7 @@ public class User {
     private String role;
 
     // ─── New Fields ──────────────────────────────────────────────────
-    @Column(length = 15)
+    @Column(length = 15, nullable = true)
     private String mobile;
 
     @Column(length = 100)

@@ -16,6 +16,7 @@ public class BidResponse {
     private String productName;
     private Long bidderId;
     private String bidderName;
+    private String bidderProfilePhoto;
     private Double bidAmount;
     private LocalDateTime timestamp;
 }

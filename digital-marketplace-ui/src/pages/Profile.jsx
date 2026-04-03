@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import API from '../api/axios'
 import Navbar from '../components/Navbar'
@@ -15,6 +15,8 @@ function Profile() {
     const [form, setForm] = useState({})
     const [loading, setLoading] = useState(true)
     const [saveMsg, setSaveMsg] = useState('')
+    const [uploading, setUploading] = useState(false)
+    const fileInputRef = useRef(null)
 
     useEffect(() => {
         if (!localStorage.getItem('token')) { navigate('/login'); return }
@@ -67,6 +69,46 @@ function Profile() {
         }
     }
 
+    const handlePhotoClick = () => {
+        fileInputRef.current?.click()
+    }
+
+    const handlePhotoChange = async (e) => {
+        const file = e.target.files[0]
+        if (!file) return
+
+        if (file.size > 10 * 1024 * 1024) {
+            setSaveMsg('Image size should be less than 10MB')
+            setTimeout(() => setSaveMsg(''), 3000)
+            return
+        }
+
+        const formData = new FormData()
+        formData.append('file', file)
+
+        setUploading(true)
+        setSaveMsg('Uploading photo...')
+
+        try {
+            const res = await API.put('/api/users/profile/photo', formData, {
+                headers: { 'Content-Type': 'multipart/form-data' }
+            })
+            const photoUrl = res.data
+            setProfile(prev => ({ ...prev, profilePhoto: photoUrl }))
+            localStorage.setItem('profilePhoto', photoUrl)
+            setSaveMsg('Photo updated! Refreshing...')
+            // Give Cloudinary a moment to propagate
+            setTimeout(() => {
+                setSaveMsg('Profile photo updated successfully!')
+                setTimeout(() => setSaveMsg(''), 3000)
+            }, 1000)
+        } catch (err) {
+            setSaveMsg('Failed to upload photo.')
+        } finally {
+            setUploading(false)
+        }
+    }
+
     const getStatusClass = (status) => {
         if (status === 'ACTIVE') return 'profile-status-active'
         if (status === 'PENDING') return 'profile-status-pending'
@@ -84,12 +126,35 @@ function Profile() {
         <div className="profile-page">
             <Navbar />
             <div className="profile-container">
+                {profile && !profile.mobile && (
+                    <div className="profile-warning-banner">
+                        ⚠️ <strong>Action Required:</strong> Please add your mobile number to enable bidding and buying features.
+                    </div>
+                )}
 
                 {/* Profile Card */}
                 <div className="profile-card">
-                    <div className="profile-avatar">
-                        {profile?.name?.charAt(0).toUpperCase()}
+                    <div 
+                        className={`profile-avatar ${uploading ? 'uploading' : ''}`}
+                        onClick={handlePhotoClick}
+                        title="Click to change photo"
+                    >
+                        {profile?.profilePhoto ? (
+                            <img src={profile.profilePhoto} alt={profile.name} className="profile-avatar-img" />
+                        ) : (
+                            profile?.name?.charAt(0).toUpperCase()
+                        )}
+                        <div className="profile-avatar-overlay">
+                            <span>{uploading ? '...' : '📷'}</span>
+                        </div>
                     </div>
+                    <input 
+                        type="file" 
+                        ref={fileInputRef} 
+                        onChange={handlePhotoChange} 
+                        style={{ display: 'none' }} 
+                        accept="image/*"
+                    />
 
                     <div className="profile-info">
                         {editing ? (
