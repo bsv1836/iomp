@@ -31,6 +31,15 @@ public class ProductService {
         User seller = userRepository.findByEmail(userDetails.getUsername())
                 .orElseThrow(() -> new RuntimeException("Seller not found"));
 
+        // Price/Bid Caps
+        double MAX_PRICE_LIMIT = 1_000_000_000.0;
+        if (request.getStartingPrice() != null && request.getStartingPrice() > MAX_PRICE_LIMIT) {
+            throw new RuntimeException("Starting price is too high! Maximum allowed is ₹1 Billion.");
+        }
+        if (request.getBidIncrement() != null && request.getBidIncrement() > MAX_PRICE_LIMIT) {
+            throw new RuntimeException("Bid increment is too high! Maximum allowed is ₹1 Billion.");
+        }
+
         Product product = Product.builder()
                 .seller(seller)
                 .name(request.getName())

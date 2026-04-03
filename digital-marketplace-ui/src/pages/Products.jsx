@@ -10,6 +10,7 @@ function Products() {
     const [unavailable, setUnavailable] = useState([])
     const [loading, setLoading] = useState(true)
     const [selectedCategory, setSelectedCategory] = useState('All')
+    const [searchTerm, setSearchTerm] = useState('')
 
     useEffect(() => {
         Promise.all([
@@ -28,8 +29,14 @@ function Products() {
     const directSale = products.filter(p => p.saleType === 'DIRECT')
     const categories = ['All', ...new Set(products.map(p => p.category).filter(Boolean))]
 
-    const filteredAuctions = selectedCategory === 'All' ? auctions : auctions.filter(p => p.category === selectedCategory)
-    const filteredDirect = selectedCategory === 'All' ? directSale : directSale.filter(p => p.category === selectedCategory)
+    const filterFn = (p) => {
+        const term = searchTerm.toLowerCase()
+        return (p.name || '').toLowerCase().includes(term) || 
+               (p.sellerName || '').toLowerCase().includes(term)
+    }
+    const filteredAuctions = (selectedCategory === 'All' ? auctions : auctions.filter(p => p.category === selectedCategory)).filter(filterFn)
+    const filteredDirect = (selectedCategory === 'All' ? directSale : directSale.filter(p => p.category === selectedCategory)).filter(filterFn)
+    const filteredUnavailable = (unavailable || []).filter(filterFn)
 
     return (
         <div className="products-page">
@@ -42,6 +49,22 @@ function Products() {
                     </div>
                 ) : (
                     <>
+                        <div className="products-search-bar">
+                            <div className="products-search-inner">
+                                <span className="products-search-icon">🔍</span>
+                                <input 
+                                    type="text" 
+                                    placeholder="Search products or sellers..." 
+                                    value={searchTerm}
+                                    onChange={(e) => setSearchTerm(e.target.value)}
+                                    className="products-search-input"
+                                />
+                                {searchTerm && (
+                                    <button className="products-search-clear" onClick={() => setSearchTerm('')}>×</button>
+                                )}
+                            </div>
+                        </div>
+
                         {/* Category Filter */}
                         {categories.length > 1 && (
                             <div className="products-category-bar">
@@ -116,7 +139,7 @@ function Products() {
                                         </span>
                                     </div>
                                     <div className="products-grid">
-                                        {unavailable.map(p => (
+                                        {filteredUnavailable.map(p => (
                                             <ProductCard key={p.productId} product={p} onClick={() => navigate(`/products/${p.productId}`)} unavailable />
                                         ))}
                                     </div>

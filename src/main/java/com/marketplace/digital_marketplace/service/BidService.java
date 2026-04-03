@@ -70,6 +70,13 @@ public class BidService {
         if (request.getBidAmount() == null) {
             throw new RuntimeException("Bid amount is required");
         }
+        
+        // 7a. Hard Cap: Maximum bid of 1 Billion (100 Crores)
+        double MAX_BID_LIMIT = 1_000_000_000.0;
+        if (request.getBidAmount() > MAX_BID_LIMIT) {
+            throw new RuntimeException("Bid too high! Maximum allowed bid is ₹1 Billion.");
+        }
+
         double minimumBid = product.getCurrentPrice() + product.getBidIncrement();
         if (request.getBidAmount() < minimumBid) {
             throw new RuntimeException(

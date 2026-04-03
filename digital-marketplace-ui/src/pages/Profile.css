@@ -114,6 +114,7 @@
     transition: var(--transition-smooth);
     font-size: 24px;
     backdrop-filter: blur(4px);
+    border-radius: 50%;
 }
 
 .profile-avatar:hover .profile-avatar-overlay {
@@ -136,6 +137,8 @@
     font-weight: 700;
     margin: 0 0 8px 0;
     text-shadow: 0 0 10px rgba(255,255,255,0.1);
+    overflow-wrap: break-word;
+    word-wrap: break-word;
 }
 
 .profile-email, .profile-meta {
@@ -297,6 +300,65 @@
     margin-top: 4px;
 }
 
+.profile-search-bar {
+    margin-bottom: 24px;
+    width: 100%;
+    max-width: 500px;
+}
+
+.profile-search-inner {
+    display: flex;
+    align-items: center;
+    background: var(--bg-glass);
+    border: 1px solid var(--border-light);
+    border-radius: 12px;
+    padding: 0 16px;
+    transition: var(--transition-smooth);
+    backdrop-filter: blur(10px);
+}
+
+.profile-search-inner:focus-within {
+    border-color: var(--accent-indigo);
+    box-shadow: 0 0 0 1px var(--accent-indigo), 0 0 20px rgba(99, 102, 241, 0.2);
+    background: var(--bg-glass-hover);
+}
+
+.profile-search-icon {
+    font-size: 16px;
+    margin-right: 12px;
+    opacity: 0.6;
+}
+
+.profile-search-input {
+    width: 100%;
+    padding: 12px 0;
+    background: transparent;
+    border: none;
+    color: var(--text-primary);
+    font-size: 14px;
+    outline: none;
+}
+
+.profile-search-input::placeholder {
+    color: var(--text-muted);
+}
+
+.profile-search-clear {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 18px;
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.profile-search-clear:hover {
+    color: var(--text-primary);
+}
+
 .profile-tabs {
     display: flex;
     gap: 12px;
@@ -370,6 +432,8 @@
     font-size: 18px;
     font-weight: 600;
     margin: 0 0 8px 0;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
 }
 
 .profile-item-meta {
@@ -438,6 +502,9 @@
     font-size: 24px;
     font-weight: 700;
     text-shadow: 0 0 10px rgba(217, 70, 239, 0.3);
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    max-width: 150px;
 }
 
 .profile-empty-state {

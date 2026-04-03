@@ -21,6 +21,8 @@ function ProductDetail() {
     const [winner, setWinner] = useState(null)
     const [contacts, setContacts] = useState(null)
     const [showConfirmModal, setShowConfirmModal] = useState(false)
+    const [showHighBidWarning, setShowHighBidWarning] = useState('')
+    const [isHighBidConfirmed, setIsHighBidConfirmed] = useState(false)
     const userId = parseInt(localStorage.getItem('userId'))
     const stompClient = useRef(null)
 
@@ -78,11 +80,33 @@ function ProductDetail() {
 
     const handleBid = async () => {
         if (!localStorage.getItem('token')) { navigate('/login'); return }
+        
+        const bid = parseFloat(bidAmount)
+        if (isNaN(bid)) return
+
+        // 1B Hard Cap
+        if (bid > 1000000000) {
+            setError('Maximum allowed bid is ₹1 Billion.')
+            return
+        }
+
+        // High Bid Warning
+        const isDouble = bid >= product.currentPrice * 2
+        const isHigh = bid >= product.currentPrice * 1.5
+
+        if ((isDouble || isHigh) && !isHighBidConfirmed) {
+            setShowHighBidWarning(isDouble ? '⚠️ CRITICAL: You are MORE THAN DOUBLING the bid!' : '⚠️ CAUTION: Increasing bid by over 50%.')
+            setIsHighBidConfirmed(true)
+            return
+        }
+
         setLoading(true); setError(''); setMessage('')
         try {
-            await API.post(`/api/bids/${id}`, { bidAmount: parseFloat(bidAmount) })
+            await API.post(`/api/bids/${id}`, { bidAmount: bid })
             setMessage('Bid placed successfully!')
             setBidAmount('')
+            setShowHighBidWarning('')
+            setIsHighBidConfirmed(false)
         } catch (err) {
             setError(err.response?.data || 'Failed to place bid.')
         } finally { setLoading(false) }
@@ -272,12 +296,18 @@ function ProductDetail() {
                                             type="number"
                                             placeholder={`Minimum ₹${minimumBid?.toLocaleString()}`}
                                             value={bidAmount}
-                                            onChange={e => setBidAmount(e.target.value)}
+                                            onChange={e => {
+                                                setBidAmount(e.target.value)
+                                                setShowHighBidWarning('')
+                                                setIsHighBidConfirmed(false)
+                                            }}
                                             className="product-bid-input"
                                             min={minimumBid}
+                                            max="1000000000"
                                         />
-                                        <button onClick={handleBid} className="product-action-btn" disabled={loading}>
-                                            {loading ? 'Placing...' : 'Place Bid'}
+                                        {showHighBidWarning && <p className="product-high-bid-warning">{showHighBidWarning}</p>}
+                                        <button onClick={handleBid} className={`product-action-btn ${isHighBidConfirmed ? 'confirm-high-bid' : ''}`} disabled={loading}>
+                                            {loading ? 'Placing...' : isHighBidConfirmed ? 'Confirm Heavy Bid' : 'Place Bid'}
                                         </button>
                                     </>
                                 ) : (

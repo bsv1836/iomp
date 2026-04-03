@@ -11,6 +11,7 @@ function Profile() {
     const [wonProducts, setWonProducts] = useState([])
     const [myBids, setMyBids] = useState([])
     const [activeTab, setActiveTab] = useState('listed')
+    const [searchTerm, setSearchTerm] = useState('')
     const [editing, setEditing] = useState(false)
     const [form, setForm] = useState({})
     const [loading, setLoading] = useState(true)
@@ -240,13 +241,30 @@ function Profile() {
                     ))}
                 </div>
 
+                {/* Search Bar */}
+                <div className="profile-search-bar">
+                    <div className="profile-search-inner">
+                        <span className="profile-search-icon">🔍</span>
+                        <input 
+                            type="text" 
+                            placeholder="Search your listings, wins, or bids..." 
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            className="profile-search-input"
+                        />
+                        {searchTerm && (
+                            <button className="profile-search-clear" onClick={() => setSearchTerm('')}>×</button>
+                        )}
+                    </div>
+                </div>
+
                 {/* Tab Content */}
                 <div>
                     {/* My Listings */}
                     {activeTab === 'listed' && (
-                        listedProducts.length === 0 ? <EmptyState text="You haven't listed any products yet." /> : (
+                        listedProducts.filter(p => p.name.toLowerCase().includes(searchTerm.toLowerCase())).length === 0 ? <EmptyState text={searchTerm ? "No matching products found." : "You haven't listed any products yet."} /> : (
                             <div className="profile-list">
-                                {listedProducts.map(p => (
+                                {listedProducts.filter(p => p.name.toLowerCase().includes(searchTerm.toLowerCase())).map(p => (
                                     <div key={p.productId} className="profile-item-card">
                                         {p.imagePath && <img src={p.imagePath} alt={p.name} className="profile-item-img" />}
                                         <div className="profile-item-info">
@@ -274,9 +292,15 @@ function Profile() {
 
                     {/* Won / Bought */}
                     {activeTab === 'won' && (
-                        wonProducts.length === 0 ? <EmptyState text="You haven't won or bought any products yet." /> : (
+                        wonProducts.filter(p => 
+                            p.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                            p.sellerName?.toLowerCase().includes(searchTerm.toLowerCase())
+                        ).length === 0 ? <EmptyState text={searchTerm ? "No matching products found." : "You haven't won or bought any products yet."} /> : (
                             <div className="profile-list">
-                                {wonProducts.map(p => (
+                                {wonProducts.filter(p => 
+                                    p.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                                    p.sellerName?.toLowerCase().includes(searchTerm.toLowerCase())
+                                ).map(p => (
                                     <div key={p.productId} className="profile-item-card">
                                         {p.imagePath && <img src={p.imagePath} alt={p.name} className="profile-item-img" />}
                                         <div className="profile-item-info">
@@ -297,9 +321,9 @@ function Profile() {
 
                     {/* Bid History */}
                     {activeTab === 'bids' && (
-                        myBids.length === 0 ? <EmptyState text="You haven't placed any bids yet." /> : (
+                        myBids.filter(b => b.productName.toLowerCase().includes(searchTerm.toLowerCase())).length === 0 ? <EmptyState text={searchTerm ? "No matching bids found." : "You haven't placed any bids yet."} /> : (
                             <div className="profile-list">
-                                {myBids.map(bid => (
+                                {myBids.filter(b => b.productName.toLowerCase().includes(searchTerm.toLowerCase())).map(bid => (
                                     <div key={bid.bidId} className="profile-bid-card">
                                         <div>
                                             <p className="profile-item-name">{bid.productName}</p>

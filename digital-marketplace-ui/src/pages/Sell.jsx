@@ -52,6 +52,20 @@ function Sell() {
         e.preventDefault()
         setLoading(true); setError(''); setSuccess('')
         if (!localStorage.getItem('token')) { navigate('/login'); return }
+
+        const price = parseFloat(form.startingPrice)
+        const increment = parseFloat(form.bidIncrement)
+
+        if (price > 1000000000) {
+            setError('Starting price cannot exceed ₹1 Billion.')
+            setLoading(false)
+            return
+        }
+        if (form.saleType === 'AUCTION' && increment > 1000000000) {
+            setError('Bid increment cannot exceed ₹1 Billion.')
+            setLoading(false)
+            return
+        }
         try {
             const payload = {
                 name: form.name, description: form.description,
@@ -161,14 +175,14 @@ function Sell() {
                                         </label>
                                         <input name="startingPrice" type="number" placeholder="e.g. 50000"
                                                value={form.startingPrice} onChange={handleChange}
-                                               className="sell-input" required min="1" />
+                                               className="sell-input" required min="1" max="1000000000" />
                                     </div>
                                     {form.saleType === 'AUCTION' && (
                                         <div className="sell-field">
                                             <label className="sell-label">Bid Increment (₹) *</label>
                                             <input name="bidIncrement" type="number" placeholder="e.g. 1000"
                                                    value={form.bidIncrement} onChange={handleChange}
-                                                   className="sell-input" required min="1" />
+                                                   className="sell-input" required min="1" max="1000000000" />
                                         </div>
                                     )}
                                 </div>
