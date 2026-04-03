@@ -2,7 +2,6 @@
 
 BidBazaar is a premium, full-stack digital marketplace designed for real-time auctions and direct sales. Featuring a stunning neon-themed UI, secure Google OAuth integration, and instant bidding updates, it provides a state-of-the-art experience for both buyers and sellers.
 
-![BidBazaar Preview](https://res.cloudinary.com/dkeylz0na/image/upload/v1/previews/bidbazaar-banner.png)
 
 ---
 
@@ -102,4 +101,4 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 ---
 
-Developed with ❤️ by **Shanmukha Vas**.
+Developed with ❤️ by **Shanmukha Vas, Bhanu Prasad, Hasini**.
