@@ -6,7 +6,6 @@ import ProductDetail from './pages/ProductDetail'
 import Sell from './pages/Sell'
 import MyBids from './pages/MyBids'
 import Profile from './pages/Profile'
-import OAuth2Callback from './pages/OAuth2Callback'
 
 function App() {
     return (
@@ -20,7 +19,6 @@ function App() {
                 <Route path="/sell" element={<Sell />} />
                 <Route path="/my-bids" element={<MyBids />} />
                 <Route path="/profile" element={<Profile />} />
-                <Route path="/oauth2/callback" element={<OAuth2Callback />} />
             </Routes>
         </BrowserRouter>
     )

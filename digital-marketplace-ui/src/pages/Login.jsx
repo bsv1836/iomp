@@ -72,14 +72,6 @@ function Login() {
                         </button>
                     </form>
 
-                    <div className="oauth-divider">
-                        <span>or</span>
-                    </div>
-
-                    <a href="http://localhost:8080/oauth2/authorization/google" className="oauth-google-btn">
-                        <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" className="oauth-google-icon" />
-                        Sign in with Google
-                    </a>
 
                     <p className="login-footer">
                         Don't have an account?{' '}
