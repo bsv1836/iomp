@@ -47,7 +47,7 @@ function Register() {
                             <label className="register-label">Full Name</label>
                             <input
                                 name="name" type="text"
-                                placeholder="John Doe"
+                                placeholder="Name"
                                 value={form.name} onChange={handleChange}
                                 className="register-input" required
                             />
@@ -89,14 +89,14 @@ function Register() {
                         </button>
                     </form>
 
-                    <div className="oauth-divider">
+                    {/* <div className="oauth-divider">
                         <span>or</span>
-                    </div>
+                    </div> */}
 
-                    <a href="http://localhost:8080/oauth2/authorization/google" className="oauth-google-btn">
+                    {/* <a href="http://localhost:8080/oauth2/authorization/google" className="oauth-google-btn">
                         <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" className="oauth-google-icon" />
                         Sign up with Google
-                    </a>
+                    </a> */}
 
                     <p className="register-footer">
                         Already have an account?{' '}
