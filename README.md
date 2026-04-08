@@ -80,15 +80,13 @@ digital-marketplace/
 
 ## 🔐 Environment Variables
 
-To run this project, you will need to add the following environment variables:
+Create a root-level `.env` file with these values. The backend loads it automatically on startup.
 
 | Variable | Description |
 | :--- | :--- |
-| `SPRING_DATASOURCE_URL` | MySQL Connection String |
+| `SPRING_DATASOURCE_URL` | PostgreSQL Connection String |
 | `SPRING_DATASOURCE_USERNAME` | Database User |
 | `SPRING_DATASOURCE_PASSWORD` | Database Password |
-| `GOOGLE_CLIENT_ID` | Google OAuth Client ID |
-| `GOOGLE_CLIENT_SECRET` | Google OAuth Client Secret |
 | `CLOUDINARY_CLOUD_NAME` | Cloudinary Cloud Name |
 | `CLOUDINARY_API_KEY` | Cloudinary API Key |
 | `CLOUDINARY_API_SECRET` | Cloudinary API Secret |
