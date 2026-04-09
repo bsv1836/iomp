@@ -349,41 +349,66 @@ function ProductDetail() {
                         {contacts && (
                             <div className="product-contact-card">
                                 <p className="product-card-title">Contact Details</p>
-                                <div className="product-contact-section">
-                                    <p className="product-contact-role">Seller</p>
-                                    <div className="contact-user-info">
-                                        <div className="contact-avatar">
-                                            {contacts.sellerProfilePhoto ? (
-                                                <img src={contacts.sellerProfilePhoto} alt={contacts.sellerName} className="seller-avatar-img" />
-                                            ) : (
-                                                contacts.sellerName?.charAt(0).toUpperCase()
-                                            )}
-                                        </div>
-                                        <div>
-                                            <p className="product-contact-item">👤 {contacts.sellerName}</p>
-                                            <p className="product-contact-item">✉️ {contacts.sellerEmail}</p>
-                                            <p className="product-contact-item">📱 {contacts.sellerMobile || 'Not provided'}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="product-divider" />
-                                <div className="product-contact-section">
-                                    <p className="product-contact-role">Buyer</p>
-                                    <div className="contact-user-info">
-                                        <div className="contact-avatar">
-                                            {contacts.winnerProfilePhoto ? (
-                                                <img src={contacts.winnerProfilePhoto} alt={contacts.winnerName} className="seller-avatar-img" />
-                                            ) : (
-                                                contacts.winnerName?.charAt(0).toUpperCase()
-                                            )}
-                                        </div>
-                                        <div>
-                                            <p className="product-contact-item">👤 {contacts.winnerName}</p>
-                                            <p className="product-contact-item">✉️ {contacts.winnerEmail}</p>
-                                            <p className="product-contact-item">📱 {contacts.winnerMobile || 'Not provided'}</p>
+                                
+                                {isSeller ? (
+                                    <div className="product-contact-section">
+                                        <p className="product-contact-role">Buyer Info</p>
+                                        <div className="contact-user-info">
+                                            <div className="contact-avatar">
+                                                {contacts.winnerProfilePhoto ? (
+                                                    <img src={contacts.winnerProfilePhoto} alt={contacts.winnerName} className="seller-avatar-img" />
+                                                ) : (
+                                                    contacts.winnerName?.charAt(0).toUpperCase()
+                                                )}
+                                            </div>
+                                            <div>
+                                                <p className="product-contact-item">👤 {contacts.winnerName}</p>
+                                                <p className="product-contact-item">✉️ {contacts.winnerEmail}</p>
+                                                <p className="product-contact-item">📱 {contacts.winnerMobile || 'Not provided'}</p>
+                                                
+                                                <div style={{ marginTop: '12px', display: 'flex', gap: '10px' }}>
+                                                    <a href={`mailto:${contacts.winnerEmail}`} className="product-action-btn" style={{ padding: '8px 16px', fontSize: '13px', width: 'auto', textDecoration: 'none' }}>
+                                                        📧 Email
+                                                    </a>
+                                                    {contacts.winnerMobile && (
+                                                        <a href={`https://wa.me/91${contacts.winnerMobile.replace(/[^0-9]/g, '')}`} target="_blank" rel="noopener noreferrer" className="product-action-btn confirm-sale-btn" style={{ padding: '8px 16px', fontSize: '13px', width: 'auto', background: '#25D366', textDecoration: 'none', boxShadow: '0 0 15px rgba(37, 211, 102, 0.4)' }}>
+                                                            💬 WhatsApp
+                                                        </a>
+                                                    )}
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+                                ) : (
+                                    <div className="product-contact-section">
+                                        <p className="product-contact-role">Seller Info</p>
+                                        <div className="contact-user-info">
+                                            <div className="contact-avatar">
+                                                {contacts.sellerProfilePhoto ? (
+                                                    <img src={contacts.sellerProfilePhoto} alt={contacts.sellerName} className="seller-avatar-img" />
+                                                ) : (
+                                                    contacts.sellerName?.charAt(0).toUpperCase()
+                                                )}
+                                            </div>
+                                            <div>
+                                                <p className="product-contact-item">👤 {contacts.sellerName}</p>
+                                                <p className="product-contact-item">✉️ {contacts.sellerEmail}</p>
+                                                <p className="product-contact-item">📱 {contacts.sellerMobile || 'Not provided'}</p>
+                                                
+                                                <div style={{ marginTop: '12px', display: 'flex', gap: '10px' }}>
+                                                    <a href={`mailto:${contacts.sellerEmail}`} className="product-action-btn" style={{ padding: '8px 16px', fontSize: '13px', width: 'auto', textDecoration: 'none' }}>
+                                                        📧 Email
+                                                    </a>
+                                                    {contacts.sellerMobile && (
+                                                        <a href={`https://wa.me/91${contacts.sellerMobile.replace(/[^0-9]/g, '')}`} target="_blank" rel="noopener noreferrer" className="product-action-btn confirm-sale-btn" style={{ padding: '8px 16px', fontSize: '13px', width: 'auto', background: '#25D366', textDecoration: 'none', boxShadow: '0 0 15px rgba(37, 211, 102, 0.4)' }}>
+                                                            💬 WhatsApp
+                                                        </a>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
                             </div>
                         )}
 
