@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import API from '../api/axios'
 import Navbar from '../components/Navbar'
+import Footer from '../components/Footer'
 import './MyBids.css'
 
 function MyBids() {
@@ -76,6 +77,7 @@ function MyBids() {
                     </div>
                 )}
             </div>
+            <Footer />
         </div>
     )
 }

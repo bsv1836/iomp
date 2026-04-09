@@ -35,7 +35,7 @@ function Login() {
         <div className="login-page">
             <div className="login-container">
                 <div className="login-header">
-                    <h1 className="login-brand">BidBazaar</h1>
+                    <h1 className="login-brand">Emporion</h1>
                     <p className="login-tagline-sub">Welcome back. Please sign in to your account.</p>
                 </div>
 

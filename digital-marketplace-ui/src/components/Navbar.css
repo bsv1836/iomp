@@ -36,6 +36,13 @@
     filter: brightness(1.2);
 }
 
+.navbar-logo {
+    height: 32px;
+    width: auto;
+    display: block;
+    transition: var(--transition-smooth);
+}
+
 .navbar-link {
     color: var(--text-secondary);
     text-decoration: none;

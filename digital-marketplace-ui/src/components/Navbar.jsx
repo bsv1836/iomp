@@ -73,7 +73,7 @@ function Navbar() {
         <nav className="navbar-container">
             <div className="navbar-left">
                 <Link to="/products" className="navbar-brand">
-                    BidBazaar
+                    Emporion
                 </Link>
                 <Link to="/products" className={`navbar-link ${isActive('/products') ? 'active' : ''}`}>
                     Browse

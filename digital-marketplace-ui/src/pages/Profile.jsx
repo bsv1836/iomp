@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import API from '../api/axios'
 import Navbar from '../components/Navbar'
+import Footer from '../components/Footer'
 import './Profile.css'
 
 function Profile() {
@@ -342,6 +343,7 @@ function Profile() {
                     )}
                 </div>
             </div>
+            <Footer />
         </div>
     )
 }

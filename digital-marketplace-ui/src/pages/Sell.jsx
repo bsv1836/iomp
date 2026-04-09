@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import API from '../api/axios'
 import Navbar from '../components/Navbar'
+import Footer from '../components/Footer'
 import './Sell.css'
 
 const CATEGORIES = [
@@ -291,6 +292,7 @@ function Sell() {
                     </div>
                 </form>
             </div>
+            <Footer />
         </div>
     )
 }

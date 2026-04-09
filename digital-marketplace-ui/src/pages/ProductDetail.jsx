@@ -4,6 +4,7 @@ import { Client } from '@stomp/stompjs'
 import SockJS from 'sockjs-client'
 import API from '../api/axios'
 import Navbar from '../components/Navbar'
+import Footer from '../components/Footer'
 import './ProductDetail.css'
 
 const MONTH_NAMES = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
@@ -437,6 +438,7 @@ function ProductDetail() {
                     </div>
                 </div>
             )}
+            <Footer />
         </div>
     )
 }

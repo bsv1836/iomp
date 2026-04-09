@@ -33,7 +33,7 @@ function Register() {
         <div className="register-page">
             <div className="register-container">
                 <div className="register-header">
-                    <h1 className="register-brand">BidBazaar</h1>
+                    <h1 className="register-brand">Emporion</h1>
                     <p className="register-tagline-sub">Join the marketplace for free.</p>
                 </div>
 
