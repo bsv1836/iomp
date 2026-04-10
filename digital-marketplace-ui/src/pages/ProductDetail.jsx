@@ -9,6 +9,64 @@ import './ProductDetail.css'
 
 const MONTH_NAMES = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
 
+function CountdownTimer({ endTime }) {
+    const [timeLeft, setTimeLeft] = useState(calculateTimeLeft())
+
+    function calculateTimeLeft() {
+        const difference = new Date(endTime) - new Date()
+        let timeLeft = {}
+
+        if (difference > 0) {
+            timeLeft = {
+                days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+                hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+                minutes: Math.floor((difference / 1000 / 60) % 60),
+                seconds: Math.floor((difference / 1000) % 60),
+                totalMs: difference
+            }
+        } else {
+            timeLeft = { totalMs: 0 }
+        }
+        return timeLeft
+    }
+
+    useEffect(() => {
+        const timer = setInterval(() => {
+            setTimeLeft(calculateTimeLeft())
+        }, 1000)
+        return () => clearInterval(timer)
+    }, [endTime])
+
+    if (!timeLeft.totalMs || timeLeft.totalMs <= 0) {
+        return <p className="product-meta-value highlight">Auction Ended</p>
+    }
+
+    const isUrgent = timeLeft.totalMs < 24 * 60 * 60 * 1000
+
+    return (
+        <div className={`auction-timer-container ${isUrgent ? 'urgent' : ''}`}>
+            {timeLeft.days > 0 && (
+                <div className="timer-unit">
+                    <span className="timer-value">{timeLeft.days}</span>
+                    <span className="timer-label">Days</span>
+                </div>
+            )}
+            <div className="timer-unit">
+                <span className="timer-value">{String(timeLeft.hours).padStart(2, '0')}</span>
+                <span className="timer-label">Hrs</span>
+            </div>
+            <div className="timer-unit">
+                <span className="timer-value">{String(timeLeft.minutes).padStart(2, '0')}</span>
+                <span className="timer-label">Mins</span>
+            </div>
+            <div className="timer-unit">
+                <span className="timer-value">{String(timeLeft.seconds).padStart(2, '0')}</span>
+                <span className="timer-label">Secs</span>
+            </div>
+        </div>
+    )
+}
+
 function ProductDetail() {
     const { id } = useParams()
     const navigate = useNavigate()
@@ -260,7 +318,15 @@ function ProductDetail() {
                                         </div>
                                         <div style={{ textAlign: 'right' }}>
                                             <p className="product-meta-label">Ends At</p>
-                                            <p className="product-meta-value highlight">{new Date(product.auctionEndTime).toLocaleString()}</p>
+                                            {(() => {
+                                                const diff = new Date(product.auctionEndTime) - new Date()
+                                                const isWithinAWeek = diff > 0 && diff < 7 * 24 * 60 * 60 * 1000
+                                                return isWithinAWeek ? (
+                                                    <CountdownTimer endTime={product.auctionEndTime} />
+                                                ) : (
+                                                    <p className="product-meta-value highlight">{new Date(product.auctionEndTime).toLocaleString()}</p>
+                                                )
+                                            })()}
                                         </div>
                                     </div>
                                 </>
